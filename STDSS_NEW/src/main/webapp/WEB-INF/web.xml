@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:jsp="http://java.sun.com/xml/ns/javaee/jsp"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
+	version="2.5">
+	<welcome-file-list>
+		<welcome-file>index.jsp</welcome-file>
+	</welcome-file-list>
+	
+	<servlet>
+		<servlet-name>appServlet</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/config/appServlet/*-context.xml</param-value>
+		</init-param>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	
+	<servlet-mapping>
+		<servlet-name>appServlet</servlet-name>
+		<url-pattern>*.do</url-pattern>
+	</servlet-mapping>
+	
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+			<param-value>
+	  		 	/WEB-INF/config/root-context.xml
+		    	/WEB-INF/config/appServlet/security-context.xml
+		</param-value>
+	</context-param>
+
+	 
+  <!-- JSP 에서 include 디렉티브를 사용하기 위한 설정 값
+    url-pattern : url 패턴 지정
+    include-prelude : 모든 페이지 처음에 지정한 페이지가 삽입 됨.
+    include-coda : 모든 페이지 하단에  지정한 페이지가 삽입 됨.
+  -->	
+	<jsp-config>
+		<jsp-property-group>
+			<url-pattern>*.jsp</url-pattern>
+			<include-prelude>/WEB-INF/view/include/include-header.jspf</include-prelude>
+		</jsp-property-group>
+	</jsp-config>
+
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>org.springframework.security.web.session.HttpSessionEventPublisher</listener-class>
+	</listener>
+
+	<!-- <filter> <filter-name>springSecurityFilterChain</filter-name> <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class> 
+		</filter> <filter-mapping> <filter-name>springSecurityFilterChain</filter-name> 
+		<url-pattern>/*</url-pattern> </filter-mapping> -->
+ 
+	<filter>
+		<filter-name>httpsFilter</filter-name>
+		<filter-class>com.stdss.utils.HttpsFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>httpsFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+<!-- 크로스도메인 필터  -->
+	<filter>
+		<filter-name>cors</filter-name>
+		<filter-class>com.stdss.utils.CORSFilter</filter-class>
+	</filter>
+	<filter-mapping>
+		<filter-name>cors</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+<!-- UTF-8 인코딩 필터 -->
+	<filter>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+	</filter>
+	
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+<!--세션 말료 시간  -->
+	<session-config>
+		<session-timeout>60</session-timeout>
+	</session-config>
+
+<!-- 에러페이지 설정 -->
+	<error-page>
+		<error-code>404</error-code>
+		<location>/WEB-INF/view/error/pageNotFound.jsp</location>
+	</error-page>
+	<error-page>
+		<error-code>500</error-code>
+		<location>/WEB-INF/view/error/serverError.jsp</location>
+	</error-page>
+</web-app>

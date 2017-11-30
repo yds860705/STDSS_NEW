@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="excel">
+
+	<insert id="addExcel" parameterType="java.util.List">
+
+		INSERT INTO policy_inventory3 (
+		year,policy_code,city_group,city_code,p_mp_code,mp_code,
+		policy_title,p_code,policy_total_budget,policy_year_budget,
+		policy_start_year,policy_end_year,policy_system_code,policy_enforce_yn
+		,etc,policy_means,policy_means_etc)
+		VALUES
+		<foreach collection="list" item="item" index="index"
+			separator=",">
+
+			(
+			#{item.year},
+			#{item.policy_code},
+			#{item.city_group}
+			#{item.city_code}
+			#{item.p_mp_code}
+			#{item.mp_code}
+			#{item.policy_title}
+			#{item.p_code}
+			#{item.policy_total_budget}
+			#{item.policy_year_budget}
+			#{item.policy_start_year}
+			#{item.policy_end_year}
+			#{item.policy_system_code}
+			#{item.policy_enforce_yn}
+			#{item.etc}
+			#{item.policy_means}
+			#{item.policy_means_etc}
+			)
+		</foreach>
+	</insert>
+
+</mapper>

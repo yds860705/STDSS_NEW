@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Map>
+	<Province code="100" label="강원도" symbol="Gangwon" horizontalCenterGap="5" verticalCenterGap="10">
+		<Country code="4215000000" label="강릉" symbol="Gangneung" horizontalCenterGap="5"/>
+		<Country code="1" label="고성" symbol="GangwonGoseong" verticalCenterGap="8"/>
+		<Country code="2" label="동해" symbol="Donghae" verticalCenterGap="4"/>
+		<Country code="3" label="삼척" symbol="Samcheok" horizontalCenterGap="7"/>
+		<Country code="4" label="속초" symbol="Sokcho" verticalCenterGap="2"/>
+		<Country code="5" label="양구" symbol="Yanggu"/>
+		<Country code="6" label="양양" symbol="Yangyang"/>
+		<Country code="7" label="영월" symbol="Yeongwol" horizontalCenterGap="-2" verticalCenterGap="7"/>
+		<Country code="4213000000" label="원주" symbol="Wonju" horizontalCenterGap="-7"/>
+		<Country code="8" label="인제" symbol="Inje"/>
+		<Country code="9" label="정선" symbol="Jeongseon" horizontalCenterGap="-4"/>
+		<Country code="10" label="철원" symbol="Cheorwon"/>
+		<Country code="4211000000" label="춘천" symbol="Chuncheon" verticalCenterGap="-3"/>
+		<Country code="11" label="태백" symbol="Taebaek" verticalCenterGap="10"/>
+		<Country code="12" label="평창" symbol="Pyeongchang" horizontalCenterGap="-6"/>
+		<Country code="13" label="홍천" symbol="Hongcheon"/>
+		<Country code="14" label="화천" symbol="Hwacheon"/>
+		<Country code="15" label="횡성" symbol="Hoengseong" horizontalCenterGap="6" verticalCenterGap="-7"/>
+	</Province>  
+	<Province code="200" label="경기도" symbol="Gyeonggi" horizontalCenterGap="6" verticalCenterGap="20">
+		<Country code="16" label="가평" symbol="Gapyeong"/>
+		<Country code="4128000000" label="고양" symbol="Goyang"/>
+		<Country code="17" label="과천" symbol="Gwacheon"/>
+		<Country code="4121000000" label="광명" symbol="Gwangmyeong"/>
+		<Country code="4161000000" label="광주" symbol="Gwangjusi"/>
+		<Country code="4131000000" label="구리" symbol="Guri"/>
+		<Country code="4141000000" label="군포" symbol="Gunpo"/>
+		<Country code="4157000000" label="김포" symbol="Gimpo" horizontalCenterGap="-8"/>
+		<Country code="4136000000" label="남양주" symbol="Namyangju" horizontalCenterGap="4" verticalCenterGap="-2"/>
+		<Country code="18" label="동두천" symbol="Dongducheon"/>
+		<Country code="4119000000" label="부천" symbol="Bucheon"/>
+		<Country code="4113000000" label="성남" symbol="Seongnam"/>
+		<Country code="4111000000" label="수원" symbol="Suwon"/>
+		<Country code="4139000000" label="시흥" symbol="Siheung"/>
+		<Country code="4127000000" label="안산" symbol="Ansan" horizontalCenterGap="-2" verticalCenterGap="1"/>
+		<Country code="4155000000" label="안성" symbol="Anseong"/>
+		<Country code="4117000000" label="안양" symbol="Anyang"/>
+		<Country code="4136000000" label="양주" symbol="Yangju"/>
+		<Country code="19" label="양평" symbol="Yangpyeong"/>
+		<Country code="4167000000" label="여주" symbol="Yeoju" horizontalCenterGap="8"/>
+		<Country code="20" label="연천" symbol="Yeoncheon" horizontalCenterGap="4" verticalCenterGap="2"/>
+		<Country code="4137000000" label="오산" symbol="Osan"/>
+		<Country code="4146000000" label="용인" symbol="Yongin"/>
+		<Country code="4143000000" label="의왕" symbol="Uiwang" horizontalCenterGap="3"/>
+		<Country code="4115000000" label="의정부" symbol="Uijeongbu"/>
+		<Country code="4150000000" label="이천" symbol="Icheon" horizontalCenterGap="-4" verticalCenterGap="-2"/>
+		<Country code="4148000000" label="파주" symbol="Paju" horizontalCenterGap="-4" verticalCenterGap="2"/>
+		<Country code="4122000000" label="평택" symbol="Pyeongtaek" verticalCenterGap="3"/>
+		<Country code="4165000000" label="포천" symbol="Pocheon" horizontalCenterGap="-2"/>
+		<Country code="4145000000" label="하남" symbol="Hanam"/>
+		<Country code="4159000000" label="화성" symbol="Hwaseong" horizontalCenterGap="-4" verticalCenterGap="-4"/>
+	</Province>
+	<Province code="300" label="경상남도" symbol="Gyeongnam" horizontalCenterGap="-6" verticalCenterGap="-5">
+		<Country code="4831000000" label="거제" symbol="Geoje" horizontalCenterGap="2"/>
+		<Country code="21" label="거창" symbol="Geochang" horizontalCenterGap="4" verticalCenterGap="-4"/>
+		<Country code="22" label="고성" symbol="Goseong" horizontalCenterGap="-2"/>
+		<Country code="4825000000" label="김해" symbol="Gimhae"/>
+		<Country code="23" label="남해" symbol="Namhae" verticalCenterGap="2"/>
+		<Country code="4827000000" label="밀양" symbol="Miryang" horizontalCenterGap="-2"/>
+		<Country code="4824000000" label="사천" symbol="Sacheon"/>
+		<Country code="24" label="산청" symbol="Sancheong"/>
+		<Country code="4833000000" label="양산" symbol="Yangsan"/>
+		<Country code="25" label="의령" symbol="Uiryeong"/>
+		<Country code="4817000000" label="진주" symbol="Jinju"/>
+		<Country code="26" label="창녕" symbol="Changnyeong" horizontalCenterGap="-2"/>
+		<Country code="4812000000" label="창원" symbol="Changwon"/>
+		<Country code="4822000000" label="통영" symbol="Tongyeong"/>
+		<Country code="27" label="하동" symbol="Hadong" horizontalCenterGap="5"/>
+		<Country code="28" label="함안" symbol="Haman"/>
+		<Country code="29" label="함양" symbol="Hamyang"/>
+		<Country code="30" label="합천" symbol="Hapcheon" verticalCenterGap="4"/>
+	</Province>
+	<Province code="400" label="경상북도" symbol="Gyeongbuk" horizontalCenterGap="-20" verticalCenterGap="18">
+		<Country code="4729000000" label="경산" symbol="Gyeongsan" verticalCenterGap="4"/>
+		<Country code="4713000000" label="경주" symbol="Gyeongju" verticalCenterGap="4"/>
+		<Country code="31" label="고령" symbol="Goryeong" horizontalCenterGap="-2" verticalCenterGap="2"/>
+		<Country code="4719000000" label="구미" symbol="Gumi"/>
+		<Country code="32" label="군위" symbol="Gunwi" verticalCenterGap="2"/>
+		<Country code="4715000000" label="김천" symbol="Gimcheon" verticalCenterGap="-4"/>
+		<Country code="33" label="문경" symbol="Mungyeong" horizontalCenterGap="4"/>
+		<Country code="34" label="봉화" symbol="Bonghwa"/>
+		<Country code="4725000000" label="상주" symbol="Sangju" verticalCenterGap="4"/>
+		<Country code="35" label="성주" symbol="Seongju"/>
+		<Country code="4717000000" label="안동" symbol="Andong" horizontalCenterGap="4"/>
+		<Country code="36" label="영덕" symbol="Yeongdeok" horizontalCenterGap="3"/>
+		<Country code="37" label="영양" symbol="Yeongyang"/>
+		<Country code="4721000000" label="영주" symbol="Yeongju" horizontalCenterGap="-4"/>
+		<Country code="4723000000" label="영천" symbol="Yeongcheon" horizontalCenterGap="2"/>
+		<Country code="38" label="예천" symbol="Yecheon"/>
+		<Country code="39" label="울릉" symbol="Ulleung"/>
+		<Country code="40" label="울진" symbol="Uljin" horizontalCenterGap="1" verticalCenterGap="-3"/>
+		<Country code="41" label="의성" symbol="Uiseong" verticalCenterGap="2"/>
+		<Country code="42" label="청도" symbol="Cheongdo"  verticalCenterGap="6"/>
+		<Country code="44" label="청송" symbol="Cheongsong" horizontalCenterGap="2" verticalCenterGap="4"/>
+		<Country code="45" label="칠곡" symbol="Chilgok"/>
+		<Country code="4711000000" label="포항" symbol="Pohang" horizontalCenterGap="-3" verticalCenterGap="-8"/>
+	</Province>
+	<Province code="2900000000" label="광주" symbol="Gwangju">
+		<!-- <Country code="501" label="광산구" symbol="Gwangsan"/>
+		<Country code="502" label="남구" symbol="GwangjuNam" horizontalCenterGap="8" verticalCenterGap="15"/>
+		<Country code="503" label="동구" symbol="GwangjuDong"/>
+		<Country code="504" label="북구" symbol="GwangjuBuk"/>
+		<Country code="505" label="서구" symbol="GwangjuSeo"/> -->
+	</Province>
+	<Province code="2700000000" label="대구" symbol="Daegu">
+		<!-- <Country code="601" label="남구" symbol="DaeguNam" horizontalCenterGap="2"/>
+		<Country code="602" label="달서구" symbol="Dalseo" horizontalCenterGap="-5" verticalCenterGap="-6"/>
+		<Country code="603" label="달성군" symbol="Dalseong" horizontalCenterGap="-10" verticalCenterGap="10"/>
+		<Country code="604" label="동구" symbol="DaeguDong"/>
+		<Country code="605" label="북구" symbol="DaeguBuk" horizontalCenterGap="6" verticalCenterGap="4"/>
+		<Country code="606" label="서구" symbol="DaeguSeo"/>
+		<Country code="607" label="수성구" symbol="Suseong"/>
+		<Country code="608" label="중구" symbol="DaeguJung" horizontalCenterGap="2"/> -->
+	</Province>
+	<Province code="3000000000" label="대전" symbol="Daejeon">
+		<!-- <Country code="701" label="대덕구" symbol="Daedeok" horizontalCenterGap="-5" verticalCenterGap="-10"/>
+		<Country code="702" label="동구" symbol="DaejeonDong" horizontalCenterGap="-5"/>
+		<Country code="703" label="서구" symbol="DaejeonSeo"/>
+		<Country code="704" label="유성구" symbol="Yuseong"/>
+		<Country code="705" label="중구" symbol="DaejeonJung" horizontalCenterGap="-2"/> -->
+	</Province>
+	<Province code="2600000000" label="부산" symbol="Busan" verticalCenterGap="1">
+		<!-- <Country code="801" label="강서구" symbol="BusanGangseo" verticalCenterGap="-12"/>
+		<Country code="802" label="금정구" symbol="Geumjeong"/>
+		<Country code="803" label="기장군" symbol="Gijang" horizontalCenterGap="-4"/>
+		<Country code="804" label="남구" symbol="BusanNam"/>
+		<Country code="805" label="동구" symbol="BusanDong"/>
+		<Country code="806" label="동래구" symbol="Dongnae"/>
+		<Country code="807" label="부산진구" symbol="Busanjin"/>
+		<Country code="808" label="북구" symbol="BusanBuk"/>
+		<Country code="809" label="사상구" symbol="Sasang"/>
+		<Country code="810" label="사하구" symbol="Saha" verticalCenterGap="-8"/>
+		<Country code="811" label="서구" symbol="BusanSeo" horizontalCenterGap="0" verticalCenterGap="-7"/>
+		<Country code="812" label="수영구" symbol="Suyeong"/>
+		<Country code="813" label="연제구" symbol="Yeonje" verticalCenterGap="-3"/>
+		<Country code="814" label="영도구" symbol="Yeongdo"/>
+		<Country code="815" label="중구" symbol="BusanJung"/>
+		<Country code="816" label="해운대구" symbol="Haeundae"/> -->
+	</Province>
+	<Province code="1100000000" label="서울" symbol="Seoul" horizontalCenterGap="1" verticalCenterGap="1">
+		<!-- <Country code="901" label="강남구" symbol="Gangnam" horizontalCenterGap="-10"/>
+		<Country code="902" label="강동구" symbol="Gangdong"/>
+		<Country code="903" label="강북구" symbol="Gangbuk" horizontalCenterGap="-6" verticalCenterGap="6"/>
+		<Country code="904" label="강서구" symbol="Gangseo"/>
+		<Country code="905" label="관악구" symbol="Gwanak"/>
+		<Country code="906" label="광진구" symbol="Gwangjin"/>
+		<Country code="907" label="구로구" symbol="Guro" horizontalCenterGap="-14" verticalCenterGap="4"/>
+		<Country code="908" label="금천구" symbol="Geumcheon"/>
+		<Country code="909" label="노원구" symbol="Nowon"/>
+		<Country code="910" label="도봉구" symbol="Dobong"/>
+		<Country code="911" label="동대문구" symbol="Dongdaemun" verticalCenterGap="2"/>
+		<Country code="912" label="동작구" symbol="Dongjak" horizontalCenterGap="2" verticalCenterGap="-4"/>
+		<Country code="913" label="마포구" symbol="Mapo" horizontalCenterGap="-1" verticalCenterGap="2"/>
+		<Country code="914" label="서대문구" symbol="Seodaemun" verticalCenterGap="4"/>
+		<Country code="915" label="서초구" symbol="Seocho" horizontalCenterGap="-18" verticalCenterGap="-4"/>
+		<Country code="916" label="성동구" symbol="Seongdong"/>
+		<Country code="917" label="성북구" symbol="Seongbuk" horizontalCenterGap="-5" verticalCenterGap="6"/>
+		<Country code="918" label="송파구" symbol="Songpa"/>
+		<Country code="919" label="양천구" symbol="Yangcheon" verticalCenterGap="5"/>
+		<Country code="920" label="영등포구" symbol="Yeongdeungpo" horizontalCenterGap="-4"/>
+		<Country code="921" label="용산구" symbol="Yongsan"/>
+		<Country code="922" label="은평구" symbol="Eunpyeong"/>
+		<Country code="923" label="종로구" symbol="Jongno" horizontalCenterGap="-6" verticalCenterGap="25"/>
+		<Country code="924" label="중구" symbol="SeoulJung"/>
+		<Country code="925" label="중랑구" symbol="Jungnang"/> -->
+	</Province>
+	<Province code="3100000000" label="울산" symbol="Ulsan" verticalCenterGap="-3">
+		<!-- <Country code="1001" label="남구" symbol="UlsanNam" horizontalCenterGap="8"/>
+		<Country code="1002" label="동구" symbol="UlsanDong"/>
+		<Country code="1003" label="북구" symbol="UlsanBuk"/>
+		<Country code="1004" label="울주군" symbol="Ulju"/>
+		<Country code="1005" label="중구" symbol="UlsanJung"/> -->
+	</Province>
+	<Province code="2800000000" label="인천" symbol="Incheon" horizontalCenterGap="5" verticalCenterGap="8">
+		<!-- <Country code="1101" label="강화군" symbol="Ganghwa" horizontalCenterGap="30"/>
+		<Country code="1102" label="계양구" symbol="Gyeyang"/>
+		<Country code="1103" label="남구" symbol="IncheonNam" verticalCenterGap="3"/>
+		<Country code="1104" label="남동구" symbol="Namdong" horizontalCenterGap="5"/>
+		<Country code="1105" label="동구" symbol="IncheonDong"/>
+		<Country code="1106" label="부평구" symbol="Bupyeong"/>
+		<Country code="1107" label="서구" symbol="IncheonSeo"/>
+		<Country code="1108" label="연수구" symbol="Yeonsu"/>
+		<Country code="1109" label="옹진군" symbol="Ongjin" horizontalCenterGap="5" verticalCenterGap="28"/>
+		<Country code="1110" label="중구" symbol="IncheonJung" horizontalCenterGap="-10"/> -->
+	</Province>
+	<Province code="1200" label="전라남도" symbol="Jeonnam" horizontalCenterGap="4">
+		<Country code="46" label="강진" symbol="Gangjin"/>
+		<Country code="47" label="고흥" symbol="Goheung" horizontalCenterGap="8" verticalCenterGap="4"/>
+		<Country code="48" label="곡성" symbol="Gokseong" horizontalCenterGap="5"/>
+		<Country code="4623000000" label="광양" symbol="Gwangyang" horizontalCenterGap="2" verticalCenterGap="4"/>
+		<Country code="49" label="구례" symbol="Gurye"/>
+		<Country code="50" label="나주" symbol="Naju"/>
+		<Country code="51" label="담양" symbol="Damyang"/>
+		<Country code="4611000000" label="목포" symbol="Mokpo"/>
+		<Country code="52" label="무안" symbol="Muan"/>
+		<Country code="53" label="보성" symbol="Boseong"/>
+		<Country code="4615000000" label="순천" symbol="Suncheon" verticalCenterGap="4"/>
+		<Country code="54" label="신안" symbol="Sinan"/>
+		<Country code="4613000000" label="여수" symbol="Yeosu" verticalCenterGap="-2"/>
+		<Country code="55" label="영광" symbol="Yeonggwang" verticalCenterGap="4"/>
+		<Country code="56" label="영암" symbol="Yeongam" horizontalCenterGap="4"/>
+		<Country code="57" label="완도" symbol="Wando"/>
+		<Country code="58" label="장성" symbol="Jangseong" verticalCenterGap="4"/>
+		<Country code="59" label="장흥" symbol="Jangheung" horizontalCenterGap="2"/>
+		<Country code="60" label="진도" symbol="Jindo" verticalCenterGap="3"/>
+		<Country code="61" label="함평" symbol="Hampyeong"/>
+		<Country code="62" label="해남" symbol="Haenam" horizontalCenterGap="6"/>
+		<Country code="63" label="화순" symbol="Hwasun"/>
+	</Province>
+	<Province code="1300" label="전라북도" symbol="Jeonbuk" horizontalCenterGap="4">
+		<Country code="64" label="고창" symbol="Gochang"/>
+		<Country code="4513000000" label="군산" symbol="Gunsan" horizontalCenterGap="2" verticalCenterGap="4"/>
+		<Country code="65" label="김제" symbol="Gimje"/>
+		<Country code="66" label="남원" symbol="Namwon" horizontalCenterGap="2" verticalCenterGap="1"/>
+		<Country code="67" label="무주" symbol="Muju"/>
+		<Country code="68" label="부안" symbol="Buan"/>
+		<Country code="69" label="순창" symbol="Sunchang" horizontalCenterGap="3"/>
+		<Country code="70" label="완주" symbol="Wanju" horizontalCenterGap="3" verticalCenterGap="-16"/>
+		<Country code="4514000000" label="익산" symbol="Iksan"/>
+		<Country code="71" label="임실" symbol="Imsil" horizontalCenterGap="-5"/>
+		<Country code="72" label="장수" symbol="Jangsu"/>                                                                                                                                                                                                                                                                       " label="" symbol="Jangsu" horizontalCenterGap="7"/>
+		<Country code="4511000000" label="전주" symbol="Jeonju"/>
+		<Country code="4518000000" label="정읍" symbol="Jeongeup"/>
+		<Country code="73" label="진안" symbol="Jinan"/>
+	</Province>
+	<Province code="1400" label="제주도" symbol="Jeju">
+		<Country code="5013000000" label="서귀포" symbol="Seogwipo" verticalCenterGap="12"/>
+		<Country code="5011000000" label="제주" symbol="Jeju-si" verticalCenterGap="-6"/>
+	</Province>
+	<Province code="1500" label="충청남도" symbol="Chungnam" verticalCenterGap="3" horizontalCenterGap="-8">
+		<Country code="74" label="계룡" symbol="Gyeryong"/>
+		<Country code="4415000000" label="공주" symbol="Gongju" horizontalCenterGap="2"/>
+		<Country code="75" label="금산" symbol="Geumsan"/>
+		<Country code="4423000000" label="논산" symbol="Nonsan" verticalCenterGap="4"/>
+		<Country code="4427000000" label="당진" symbol="Dangjin"/>
+		<Country code="4418000000" label="보령" symbol="Boryeong"/>
+		<Country code="76" label="부여" symbol="Buyeo"/>
+		<Country code="4421000000" label="서산" symbol="Seosan" verticalCenterGap="12"/>
+		<Country code="77" label="서천" symbol="Seocheon" horizontalCenterGap="4"/>
+		<Country code="4420000000" label="아산" symbol="Asan"/>
+		<Country code="78" label="예산" symbol="Yesan" horizontalCenterGap="8"/>
+		<Country code="4413000000" label="천안" symbol="Cheonan"/>
+		<Country code="79" label="청양" symbol="Cheongyang" horizontalCenterGap="-5"/>
+		<Country code="80" label="태안" symbol="Taean" verticalCenterGap="-11"/>
+		<Country code="81" label="홍성" symbol="Hongseong"/>
+	</Province>
+	<Province code="1600" label="충청북도" symbol="Chungbuk" horizontalCenterGap="-10" verticalCenterGap="-16">
+		<Country code="82" label="괴산" symbol="Goesan" horizontalCenterGap="-2"/>
+		<Country code="83" label="단양" symbol="Danyang" horizontalCenterGap="-6"/>
+		<Country code="84" label="보은" symbol="Boeun"/>
+		<Country code="85" label="영동" symbol="Yeongdong"/>
+		<Country code="86" label="옥천" symbol="Okcheon" horizontalCenterGap="-2"/>
+		<Country code="87" label="음성" symbol="Eumseong" horizontalCenterGap="-5" verticalCenterGap="8"/>
+		<Country code="4315000000" label="제천" symbol="Jecheon" horizontalCenterGap="4" verticalCenterGap="-17"/>
+		<Country code="88" label="증평" symbol="Jeungpyeong"/>
+		<Country code="89" label="진천" symbol="Jincheon" verticalCenterGap="5"/>
+		<Country code="4311000000" label="청주" symbol="Cheongju"/>
+		<Country code="4313000000" label="충주" symbol="Chungju"/>
+	</Province>
+	<Province code="3611000000" label="세종" symbol="Sejong" horizontalCenterGap="1">
+	<!-- 	<Country code="1701" label="세종" symbol="Sejong-sub"/> -->
+	</Province>
+</Map>

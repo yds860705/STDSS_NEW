@@ -1,0 +1,653 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="menu4">
+ 	
+
+<!-- 정책평가자료 입력 리스트 가져오기 -->	
+	<select id="menu4_0_List" parameterType="hashMap" resultType="hashMap">
+		
+    select * from
+	    (SELECT  
+	    	(SELECT COUNT(*) 
+			FROM APP_INFO AA, INDICATOR_CODE BB, (select distinct user_city_code  from member) CC 
+		    WHERE AA.INDICATOR_CODE = BB.TOTAL_CODE
+		    AND AA.SGG_CODE = CC.USER_CITY_CODE
+		    <if test="USER_CITY != 0 ">  
+			AND AA.SGG_CODE = #{USER_CITY}
+			</if>
+		    AND DEL_GB = 'N'
+			<if test="SEARCHTXT != NULL ">  
+			<if test="SEARCHTXT != ''">  
+  			     AND AA.POLICY_NAME LIKE ('%'+#{SEARCHTXT}+'%')  
+    		</if>  
+			</if>
+				<if test="searchbar != NULL ">  
+			<if test="searchbar != ''">  
+    			AND AA.INDICATOR_CODE = #{searchbar}  
+			</if>  
+			</if>
+			) as TOTAL_COUNT,
+			
+				Row_Number() Over ( Order By idx desc) as rnum,
+				IDX, INDICATOR_CODE, POLICY_NAME, TOTAL_BUDGET, NOWYEAR_BUDGET, TYPE_1, TYPE_2 SYEAR, EYEAR, WAY, CONTENT_1, 
+		        SGG_CODE,  HIT_CNT, STEP_3,CREA_DTM,AA.user_id
+			FROM stdss.dbo.APP_INFO AA,  stdss.dbo.INDICATOR_CODE BB, (select distinct user_city_code  from member) CC 
+			WHERE AA.INDICATOR_CODE = BB.TOTAL_CODE
+		    AND AA.SGG_CODE = CC.USER_CITY_CODE
+			AND DEL_GB = 'N'
+			<if test="USER_CITY != 0 ">   
+			AND AA.SGG_CODE = #{USER_CITY}
+			</if>
+			<if test="SEARCHTXT != NULL ">  
+			<if test="SEARCHTXT != ''">  
+  			     AND AA.POLICY_NAME LIKE ('%'+#{SEARCHTXT}+'%')  
+    		</if>  
+			</if>
+			
+			<if test="searchbar != NULL ">  
+			<if test="searchbar != ''">  
+    			AND AA.INDICATOR_CODE = #{searchbar}  
+			</if>  
+			</if>
+			
+			) t1	     
+		 	where rnum between ${START}  AND  ${END} 
+
+		ORDER BY IDX DESC
+	</select> 
+	
+
+	<!--정책평가자료입력 - 글쓰기 중분류 선택리스트  -->
+	<select id="getIndicatorList" resultType="hashMap">
+		SELECT * 
+		FROM INDICATOR_CODE
+	</select> 
+	
+	<!-- 글쓰기 입력 -->
+	<insert id="insertBoard" parameterType="hashmap" useGeneratedKeys="true" keyProperty="IDX">
+		INSERT INTO APP_INFO(indicator_code, year, policy_name, total_budget, nowYear_budget, type_1, type_2,type_3_text, sYear, eYear, way, way_text, content_1, sgg_code, crea_dtm, hit_cnt, del_gb,user_id) 
+	    VALUES
+	    (
+		    #{indicatorVal},
+		    #{year},
+			#{policyVal},
+			#{totalBudgetVal},
+			#{nowYearBudgetVal},
+			#{re_radioSel1},
+			#{re_radioSel2},
+			#{radio_info_text},
+			#{sYear},
+			#{eYear},
+			#{chkInfo},
+			#{chk_info_text},
+			#{content1},
+			#{userCode},
+			getdate(),
+			0,     
+			'N',
+			#{user_id}
+	    )
+		<selectKey keyProperty="IDX" resultType="string" order="AFTER">
+			SELECT MAX(IDX) FROM APP_INFO
+		</selectKey>
+	</insert>
+	
+	<insert id="insertCollection" parameterType="hashmap" useGeneratedKeys="true" keyProperty="IDX">
+		INSERT INTO policy_inventory_collection(board_idx,indicator_code, year, policy_name, total_budget, nowYear_budget, type_1, type_2,type_3_text, sYear, eYear, way, way_text, content_1, sgg_code, crea_dtm, hit_cnt, del_gb,user_id) 
+	    VALUES
+	    (
+	    	(select max(idx) from app_info),
+		    #{indicatorVal},
+		    #{year},
+			#{policyVal},
+			#{totalBudgetVal},
+			#{nowYearBudgetVal},
+			#{re_radioSel1},
+			#{re_radioSel2},
+			#{radio_info_text},
+			#{sYear},
+			#{eYear},
+			#{chkInfo},
+			#{chk_info_text},
+			#{content1},
+			#{userCode},
+			getdate(),
+			0,     
+			'N',
+			#{user_id}
+	    )
+		<selectKey keyProperty="IDX" resultType="string" order="AFTER">
+			SELECT MAX(IDX) FROM policy_inventory_collection
+		</selectKey>
+	</insert>
+	<!-- 글쓰기 파일입력  -->
+    <insert id="insertFile" parameterType="hashmap">
+		<![CDATA[
+			INSERT INTO APP_INFO_FILE
+			(
+				BOARD_IDX,
+				year,
+				ORIGINAL_FILE_NAME,
+				STORED_FILE_NAME,
+				FILE_SIZE,
+				CREA_DTM,
+				DEL_GB
+			)
+			VALUES
+			( 
+				#{BOARD_IDX},
+				#{Year},
+				#{ORIGINAL_FILE_NAME},
+				#{STORED_FILE_NAME},
+				#{FILE_SIZE},
+				getdate(),
+				'N'
+			)  
+		]]>
+	</insert>
+    <insert id="insertCollectionFile" parameterType="hashmap">
+		<![CDATA[
+			INSERT INTO policy_inventory_collection_file
+			(
+				BOARD_IDX,
+				ORIGINAL_FILE_NAME,
+				STORED_FILE_NAME,
+				FILE_SIZE,
+				CREA_DTM,
+				DEL_GB
+			)
+			VALUES
+			( 
+				#{BOARD_IDX},
+				#{ORIGINAL_FILE_NAME},
+				#{STORED_FILE_NAME},
+				#{FILE_SIZE},
+				getdate(),
+				'N'
+			)  
+		]]>
+	</insert>
+	
+    <!-- 정책평가자료입력 디테일 세부사항  -->
+    <select id="getBoardDetail" parameterType="hashmap" resultType="hashmap">
+		 select  idx, year , indicator_code , policy_name , total_budget , nowYear_budget 
+      , type_1, type_2, isnull(type_3_text,'') as type_3_text, sYear, eYear , way , isnull(way_text,' ') as way_text, content_1, content_2 , content_3 
+      , sgg_code , crea_dtm , hit_cnt , del_gb , user_id 
+	  ,total_code , code_1, step_1 , code_2, step_2, code_3, step_3,user_city_code
+	  	from app_info a, indicator_code b, (select distinct user_city_code from member) c
+		where a.indicator_code = b.total_code
+        and a.sgg_code = c.user_city_code
+        and idx = #{IDX}
+    </select>
+    
+        <select id="getBoardDetail_Manager" parameterType="hashmap" resultType="hashmap">
+		 select  idx, year , indicator_code , policy_name , total_budget , nowYear_budget 
+      , type_1, type_2, isnull(type_3_text,'') as type_3_text, sYear, eYear , way , isnull(way_text,' ') as way_text, content_1, content_2 , content_3 
+      , sgg_code , crea_dtm , hit_cnt , del_gb , user_id 
+	  ,total_code , code_1, step_1 , code_2, step_2, code_3, step_3,user_city_code
+	  	from policy_inventory_collection a, indicator_code b, (select distinct user_city_code from member) c
+		where a.indicator_code = b.total_code
+        and a.sgg_code = c.user_city_code
+        and idx = #{IDX}
+    </select>
+    
+    
+    <select id="getBoardDetailWay_manager" parameterType="hashmap" resultType="hashmap">
+        select  idx, year , indicator_code , policy_name , total_budget , nowYear_budget 
+      , type_1, type_2, type_3_text, sYear, eYear , way , isnull(way_text,' ') as way_text, content_1, content_2 , content_3 
+      , sgg_code , crea_dtm , hit_cnt , del_gb , user_id 
+	  ,total_code , code_1, step_1 , code_2, step_2, code_3, step_3,user_city_code
+	  	from app_info a, indicator_code b, (select distinct user_city_code from member) c
+		where a.indicator_code = b.total_code
+        and a.sgg_code = c.user_city_code
+        and idx = #{IDX}
+    </select>
+    
+    <!-- 조회수 +1 -->
+    <update id="updateHitCnt" parameterType="hashmap">
+		<![CDATA[
+			UPDATE app_info 
+			SET
+				HIT_CNT = ISNULL(HIT_CNT, 0) + 1
+			WHERE
+				IDX = #{IDX}	
+		]]>  
+	</update>
+	
+    
+    <select id="selectFileList" parameterType="hashmap" resultType="hashmap">
+	    <![CDATA[
+	        SELECT
+	            IDX,
+	            ORIGINAL_FILE_NAME,
+	            ROUND(FILE_SIZE/1024,1) AS FILE_SIZE
+	        FROM
+	            APP_INFO_FILE
+	        WHERE
+	            BOARD_IDX = #{IDX}
+	            AND DEL_GB = 'N'
+	    ]]>
+	</select>
+	
+	<!--정책평가자료 입력 디테일 - 교통수단 븐류  -->
+    <select id="getBoardDetailWay"  parameterType="hashmap" resultType="hashmap">
+		select way_name
+		from way_code
+		where way_code in (${resultWay})
+	</select> 
+    <select id="selectFileInfo" parameterType="hashmap" resultType="hashmap">
+	    <![CDATA[
+	        SELECT
+	            STORED_FILE_NAME,
+	            ORIGINAL_FILE_NAME
+	        FROM
+	            APP_INFO_FILE
+	        WHERE
+	            IDX = #{IDX}
+	    ]]>
+	</select>
+	<!-- 게시글 지우기 -->
+    <update id="deleteBoard" parameterType="hashmap">
+		<![CDATA[
+			UPDATE APP_INFO
+			SET
+				DEL_GB = 'Y'
+			WHERE
+				IDX = #{IDX}
+		]]>
+	</update>
+	
+    <update id="deleteCollection" parameterType="hashmap">
+		<![CDATA[
+			UPDATE policy_inventory_collection
+			SET
+				DEL_GB = 'Y'
+			WHERE
+				year = #{year}
+			and board_idx =#{IDX}	
+		]]>
+	</update>
+    <!--  글수정  -->
+    <update id="updateBoard" parameterType="hashmap">
+      	UPDATE APP_INFO SET
+      	
+		indicator_code = #{indicatorVal},
+		year = #{year},
+	    policy_name = #{policyVal},
+		total_budget = #{totalBudgetVal},
+		nowYear_budget = #{nowYearBudgetVal},
+		type_1 = #{re_radioSel1},
+		type_2 = #{re_radioSel2},
+		type_3_text = #{radio_info_text},
+		sYear = #{sYear},
+		eYear = #{eYear},
+		way = #{chkInfo},
+		way_text =#{chk_info_text},										
+		content_1 = #{content1},  
+		del_gb = 'N'
+		WHERE 
+		IDX = #{IDX}
+        
+       
+    </update>
+    <update id="updateCollection" parameterType="hashmap">
+      	UPDATE policy_inventory_collection SET
+      	
+		indicator_code = #{indicatorVal},
+	    year = #{year},
+	    policy_name = #{policyVal},
+		total_budget = #{totalBudgetVal},
+		nowYear_budget = #{nowYearBudgetVal},
+		type_1 = #{re_radioSel1},
+		type_2 = #{re_radioSel2},
+		type_3_text = #{radio_info_text},
+		sYear = #{sYear},
+		eYear = #{eYear},
+		way = #{chkInfo},
+		way_text =#{chk_info_text},										
+		content_1 = #{content1},  
+		del_gb = 'N'
+		WHERE board_idx = #{IDX}
+		and year = #{year}
+    </update>
+    
+    <!-- 파일지우기 -->
+    <update id="deleteFileList" parameterType="hashmap">
+	        UPDATE app_info_file SET
+	            del_gb = 'Y'
+	        WHERE
+	            board_idx = #{IDX}  
+	</update>
+	
+    <update id="deletefileListCollection" parameterType="hashmap">
+	        UPDATE policy_inventory_collection_file SET
+	            del_gb = 'Y'
+	        WHERE
+	            board_idx = #{IDX}  
+	</update>
+	
+	<!-- 정책평가자료입력 글수정 - 파일 -->
+    <update id="updateFile" parameterType="hashmap">
+	    <![CDATA[
+	        UPDATE app_info_file SET
+	            DEL_GB = 'N'
+	        WHERE
+	            IDX = #{FILE_IDX}     
+	    ]]>
+	</update>
+    <update id="updateFileCollection" parameterType="hashmap">
+	    <![CDATA[
+	        UPDATE policy_inventory_collection_file SET
+	            DEL_GB = 'N'
+	        WHERE
+	            IDX = #{FILE_IDX}     
+	    ]]>
+	</update>
+
+    
+    	
+	
+<!--menu4_1 시작  -->	
+	<insert id="insertExcellent" parameterType="hashmap" useGeneratedKeys="true" keyProperty="IDX">
+		INSERT INTO excellent_case(year,submit_field, policy_title, policy_summary, main_content, trial_effect, sgg_code, crea_dtm, hit_cnt, del_gb,user_id) 
+	    VALUES
+	    (
+	    	#{year},
+		    #{submit_field},
+		    #{policy_title},
+			#{policy_summary},
+			#{main_content},
+			#{trial_effect},
+			#{userCode},
+			getdate(),
+			0,
+		    'N',  
+			#{user_id}
+	    )   
+	
+</insert>
+	<insert id="insertExcellentCollection" parameterType="hashmap" useGeneratedKeys="true" keyProperty="IDX">
+		INSERT INTO excellent_case_collection(board_idx,year,submit_field, policy_title, policy_summary, main_content, trial_effect, sgg_code, crea_dtm, hit_cnt, del_gb,user_id) 
+	    VALUES
+	    (
+	    (select max(idx) from excellent_case),
+	   		#{year},
+		    #{submit_field},
+		    #{policy_title},
+			#{policy_summary},
+			#{main_content},
+			#{trial_effect},
+			#{userCode},
+			getdate(),
+			0,
+		    'N',  
+			#{user_id}
+	    )   
+	
+</insert>	
+		
+	<insert id="insertFile2" parameterType="hashmap">
+		<![CDATA[
+			INSERT INTO excellent_case_file
+			(
+				board_idx,
+				year,
+     			original_file_name,
+     			stored_file_name,
+      			file_size,
+      			crea_dtm,
+      			del_gb
+			)
+			VALUES  
+			( 
+				#{BOARD_IDX},
+				#{Year},
+				#{ORIGINAL_FILE_NAME},
+				#{STORED_FILE_NAME},
+				#{FILE_SIZE},
+				getdate(),
+				'N'
+			)
+		]]>
+	</insert>
+	
+	
+<select id="menu4_1_List" parameterType="hashMap" resultType="hashMap">
+		
+    select * from
+	    (SELECT
+	    	(SELECT COUNT(*) 
+			FROM excellent_case AA,(select distinct user_city_code  from member) CC
+		    where AA.SGG_CODE = CC.USER_CITY_CODE
+			and del_gb = 'N'
+		     <if test="USER_CITY != 0 ">
+			AND AA.SGG_CODE = #{USER_CITY}
+			</if>
+			<if test="SEARCHTXT != NULL ">  
+			<if test="SEARCHTXT != ''">  
+  			     AND AA.policy_title LIKE ('%'+#{SEARCHTXT}+'%')  
+    		</if>  
+			</if> 
+			) as TOTAL_COUNT, 
+			
+				Row_Number() Over ( Order By idx desc) as rnum,
+				idx,submit_field, policy_title, policy_summary, main_content, trial_effect, sgg_code, crea_dtm, hit_cnt, del_gb, AA.user_id
+			FROM excellent_case AA, (select distinct user_city_code  from member) CC
+		    where AA.SGG_CODE = CC.USER_CITY_CODE
+			AND DEL_GB = 'N'
+		 	<if test="USER_CITY != 0 ">   
+			AND AA.SGG_CODE = #{USER_CITY}
+			</if>
+			<if test="SEARCHTXT != NULL ">  
+			<if test="SEARCHTXT != ''">  
+  			    AND AA.policy_title LIKE ('%'+#{SEARCHTXT}+'%') 
+    		</if>  
+			</if>
+			) t1	     
+		 	where rnum between ${START}  AND  ${END} 
+
+		ORDER BY IDX DESC
+	</select> 
+	    <select id="getExcellentDetail" parameterType="hashmap" resultType="hashmap">
+        select *
+		from excellent_case a,  (select distinct user_city_code from member) c
+        where a.sgg_code = c.user_city_code
+        and idx = #{IDX}
+    </select>
+	
+	     <update id="updateHitCnt2" parameterType="hashmap">
+		<![CDATA[
+			UPDATE excellent_case 
+			SET
+				HIT_CNT = ISNULL(HIT_CNT, 0) + 1
+			WHERE
+				IDX = #{IDX}	
+		]]>  
+	</update>
+	
+	     <update id="excellentUpdated" parameterType="hashmap">
+    
+	        update excellent_case SET
+	      		submit_field =  #{submit_field},
+				policy_title = #{policy_title},
+				policy_summary = #{policy_summary},
+				main_content = #{main_content},
+				trial_effect = #{trial_effect},
+				del_gb = 'N'
+			WHERE IDX = #{IDX}
+		</update>
+
+	     <update id="excellentUpdatedCollection" parameterType="hashmap">
+    
+	        update excellent_case_collection SET
+	      		submit_field =  #{submit_field},
+				policy_title = #{policy_title},
+				policy_summary = #{policy_summary},
+				main_content = #{main_content},
+				trial_effect = #{trial_effect},
+				del_gb = 'N'
+			WHERE IDX = #{IDX}
+		</update>
+		
+	     
+	  <select id="selectFileList2" parameterType="hashmap" resultType="hashmap">
+	    <![CDATA[
+	        SELECT
+	            IDX,
+	            ORIGINAL_FILE_NAME,
+	            ROUND(FILE_SIZE/1024,1) AS FILE_SIZE
+	        FROM
+	            excellent_case_file
+	        WHERE
+	            BOARD_IDX = #{IDX}
+	            AND DEL_GB = 'N'
+	    ]]>
+	</select>
+	     <select id="selectFileInfo2" parameterType="hashmap" resultType="hashmap">
+	    <![CDATA[
+	        SELECT  
+	            STORED_FILE_NAME,
+	            ORIGINAL_FILE_NAME
+	        FROM
+	            excellent_case_file
+	        WHERE
+	            IDX = #{IDX}
+	    ]]>
+	</select>
+	 <update id="deleteFileList2" parameterType="hashmap">
+	        UPDATE excellent_case_file SET
+	            DEL_GB = 'Y'
+	        WHERE  
+	            BOARD_IDX = #{IDX}  
+	</update>
+	
+		<update id="updateFile2" parameterType="hashmap">
+	    <![CDATA[
+	        UPDATE excellent_case_file SET
+	            DEL_GB = 'N'
+	        WHERE
+	            IDX = #{FILE_IDX}     
+	    ]]>
+	</update>
+    <update id="deleteExcellent" parameterType="hashmap">
+		<![CDATA[
+			UPDATE excellent_case
+			SET
+				DEL_GB = 'Y'
+			WHERE
+				IDX = #{IDX}
+		]]>
+	</update>
+	
+    
+    <!-- manager_list -->
+
+
+	<!--관리자 페이지 리스트  -->
+	<select id="manager_list" parameterType="hashMap" resultType="hashMap">
+	    
+	SELECT * FROM(
+	select  ( 
+	select COUNT(*) from member) as TOTAL_COUNT ,Row_Number() Over ( Order By USER_CITY_CODE asc) as rnum,a.user_pwd,a.user_id,b.id, user_city_code, user_name,user_tel, user_email, cnt
+		from member a
+		 left join 
+		 
+		 (select USER_ID as id , count(user_id) as cnt
+			from app_info
+			where del_gb = 'N'
+			and year  =#{year}
+			group by user_id) b
+		on a.user_id = b.id
+	) c
+	where rnum between #{START}  AND  #{END} 
+	order by rnum asc
+	</select>  
+
+
+	<select id="manager_detailList" parameterType="hashMap" resultType="hashMap">
+		
+    select * from
+	    (SELECT  
+	    	(SELECT COUNT(*) 
+			FROM APP_INFO AA, INDICATOR_CODE BB, (select distinct user_city_code  from member) CC 
+		    WHERE AA.INDICATOR_CODE = BB.TOTAL_CODE
+		    AND AA.SGG_CODE = CC.USER_CITY_CODE
+			AND AA.user_id = #{USER_ID}
+			AND AA.year = #{year}
+		    AND DEL_GB = 'N'
+			<if test="SEARCHTXT != NULL ">  
+			<if test="SEARCHTXT != ''">  
+  			     AND AA.POLICY_NAME LIKE ('%'+#{SEARCHTXT}+'%')  
+    		</if>    
+			</if>
+			) as TOTAL_COUNT,
+			 
+				Row_Number() Over ( Order By idx desc) as rnum,
+				IDX, INDICATOR_CODE, POLICY_NAME, TOTAL_BUDGET, NOWYEAR_BUDGET, TYPE_1, TYPE_2 SYEAR, EYEAR, WAY, CONTENT_1, 
+		        SGG_CODE,  HIT_CNT, STEP_3,CREA_DTM,AA.USER_ID
+			FROM stdss.dbo.APP_INFO AA,  stdss.dbo.INDICATOR_CODE BB, (select distinct user_city_code  from member) CC 
+			WHERE AA.INDICATOR_CODE = BB.TOTAL_CODE
+		    AND AA.SGG_CODE = CC.USER_CITY_CODE
+			AND DEL_GB = 'N'
+			AND AA.USER_ID = #{USER_ID}
+			AND AA.year = #{year}
+			<if test="SEARCHTXT != NULL ">  
+			<if test="SEARCHTXT != ''">  
+  			    AND AA.POLICY_NAME LIKE ('%'+#{SEARCHTXT}+'%') 
+    		</if>  
+			</if>
+			) t1	     
+		 	where rnum between ${START}  AND  ${END} 
+					
+		
+
+		ORDER BY IDX DESC
+	
+	</select> 
+		
+	<select id="excellent_check" parameterType="hashMap" resultType="hashMap">
+	    
+		select * from excellent_case
+		where sgg_code = #{city_code}
+		and del_gb = 'n'
+	
+	</select>	
+	
+	<select id="manager_Search_List" parameterType="hashMap" resultType="hashMap">
+		
+    select * from
+	    (SELECT  
+	    	(SELECT COUNT(*) 
+			FROM policy_inventory_collection AA, INDICATOR_CODE BB, (select distinct user_city_code  from member) CC 
+		    WHERE AA.INDICATOR_CODE = BB.TOTAL_CODE
+		    AND AA.SGG_CODE = CC.USER_CITY_CODE
+			AND AA.SGG_CODE = #{manager_cityList}
+			AND BB.total_code = #{manager_partVal}
+			AND AA.year = #{selectYear}
+		    AND DEL_GB = 'N'
+			) as TOTAL_COUNT,
+			 
+				Row_Number() Over ( Order By idx desc) as rnum,
+				IDX, INDICATOR_CODE, POLICY_NAME, TOTAL_BUDGET, NOWYEAR_BUDGET, TYPE_1, TYPE_2 SYEAR, EYEAR, WAY, CONTENT_1, 
+		        SGG_CODE,  HIT_CNT, STEP_3,CREA_DTM,AA.user_id
+			FROM policy_inventory_collection AA,  stdss.dbo.INDICATOR_CODE BB, (select distinct user_city_code  from member) CC 
+			WHERE AA.INDICATOR_CODE = BB.TOTAL_CODE
+		    AND AA.SGG_CODE = CC.USER_CITY_CODE
+			AND AA.SGG_CODE = #{manager_cityList}
+			AND BB.total_code = #{manager_partVal}
+			AND AA.year = #{selectYear}
+			AND DEL_GB = 'N'
+			
+			) t1	     
+		 	where rnum between ${START}  AND  ${END} 
+
+		ORDER BY IDX desc
+	</select> 
+	
+	<select id="collectIdx" parameterType="hashMap" resultType="hashMap">
+		select * from policy_inventory_collection_file
+	 
+	</select> 
+	
+ </mapper>

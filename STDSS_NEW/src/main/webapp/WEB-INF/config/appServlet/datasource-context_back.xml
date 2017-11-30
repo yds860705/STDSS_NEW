@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/mvc"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/jdbc  http://www.springframework.org/schema/jdbc/spring-jdbc-3.0.xsd">
+		
+    
+    <!-- DataSource -->
+	<beans:bean id="sqlSession" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <beans:property name="dataSource" ref="dataSource" />
+        <beans:property name="mapperLocations" value="classpath:/sqlmap/*_sql.xml" />
+    </beans:bean>
+     
+    <beans:bean id="sqlSessionTemplate" class="org.mybatis.spring.SqlSessionTemplate">
+        <beans:constructor-arg index="0" ref="sqlSession"/>
+    </beans:bean> 
+    
+    
+    <!--  DB 연결 설정 -->
+	<beans:bean id="dataSourceSpied" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+	    <!-- Ms SQL -->
+	    <beans:property name="driverClassName" value="com.microsoft.sqlserver.jdbc.SQLServerDriver"/>
+		<beans:property name="url" value="jdbc:sqlserver://192.168.0.211:1444;DatabaseName=stdss"/>
+		<beans:property name="username" value="stdss"/>
+		<beans:property name="password" value="stdss"/>
+		<!-- MySQL -->
+		<!-- <beans:property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+		<beans:property name="url" value="jdbc:mysql://192.168.0.211:3306/stdss"/>
+		<beans:property name="username" value="stdss"/>
+		<beans:property name="password" value="mysql"/> -->
+		<!-- 내부 IP - Oracle -->
+		<!-- <beans:property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+		<beans:property name="url" value="jdbc:oracle:thin:@192.168.0.211:1521:topis"/>
+		<beans:property name="username" value="trans"/>
+		<beans:property name="password" value="trans12"/> -->
+		<!-- 외부 IP - Oracle -->    
+		<!-- <beans:property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+		<beans:property name="url" value="jdbc:oracle:thin:@175.196.214.74:1522:topis"/>
+		<beans:property name="username" value="trans"/>
+		<beans:property name="password" value="trans12"/>  -->
+	</beans:bean>
+	
+	
+	<beans:bean id="dataSource" class="net.sf.log4jdbc.Log4jdbcProxyDataSource">
+        <beans:constructor-arg ref="dataSourceSpied"></beans:constructor-arg>
+        <beans:property name="logFormatter">
+            <beans:bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter">
+                <beans:property name="loggingType" value="MULTI_LINE" />
+                <beans:property name="sqlPrefix" value="[ SQL:: ]  :  "/>
+            </beans:bean>
+        </beans:property>
+    </beans:bean>
+    
+
+</beans:beans>

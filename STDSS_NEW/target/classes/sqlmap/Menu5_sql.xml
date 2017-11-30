@@ -1,0 +1,620 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="menu5">
+ 	
+    <!-- 지표개선을 위한 정책 추천 - 지표선택 -중분류 리스트 -->
+	<select id="getPolicyCode" parameterType="hashMap" resultType="hashMap">
+	    
+		select *
+		from policy_code
+		where code_gb = 'code_8'
+		order by content
+		
+	</select> 
+	
+	<!-- 지표 개선을 위한 정책 추천  -도시 세부사항  -->
+	<select id="getCitySearch" parameterType="hashMap" resultType="hashMap">
+		
+	    select  city_idx ,city_name,city_group,city_mapping_code ,city_code
+			  ,tra_total_budget
+		      ,tra_year_budget
+		      ,replace(convert(varchar,convert(money,eco_pop),1),'.00','') as eco_pop
+		      ,replace(convert(varchar,convert(money,eco_area),1),'.00','') as eco_area
+		      ,round(convert(float,eco_pop_density),3) as eco_pop_density
+		      ,replace(convert(varchar,convert(money,tra_car_cnt),1),'.00','') as tra_car_cnt
+		      ,replace(convert(varchar,convert(money,tra_bicycle_budget),1),'.00','') as tra_bicycle_budget
+		      ,replace(convert(varchar,convert(money,tra_parking_cnt),1),'.00','') as tra_parking_cnt
+		      ,replace(convert(varchar,convert(money,tra_parking_area),1),'.00','') as tra_parking_area
+		      ,tra_trans_car
+		      ,tra_trans_bus
+		      ,tra_trans_rail
+		      ,tra_trans_air
+		      ,tra_trans_ship
+		      ,tra_trans_walk
+		      ,tra_trans_bicycle
+		      ,tra_trans_etc
+		      ,replace(convert(varchar,convert(money,tra_yearly_bus),1),'.00','') as tra_yearly_bus
+		      ,replace(convert(varchar,convert(money,tra_yearly_subway),1),'.00','') as tra_yearly_subway
+		      ,eco_aged_ratio
+		      ,tra_bis_trans
+		      ,pri_weekday_traffic
+		      ,pri_weekend_traffic
+		      ,pri_weekday_congest
+		      ,pri_weekend_congest
+		      ,pri_delay_time
+		      ,pri_co2_qua
+		      ,pri_section_acc_cnt
+		      ,pri_section_acc_per
+		      ,replace(convert(varchar,convert(money,tra_sgg_acc_cnt),1),'.00','') as tra_sgg_acc_cnt
+		      ,replace(convert(varchar,convert(money,trans_weekday_pop_cnt),1),'.00','') as trans_weekday_pop_cnt
+		      ,replace(convert(varchar,convert(money,trans_weekend_pop_cnt),1),'.00','') as trans_weekend_pop_cnt
+		      ,replace(convert(varchar,convert(money,trans_weekday_pass_cnt),1),'.00','') as trans_weekday_pass_cnt
+		      ,replace(convert(varchar,convert(money,trans_weekend_pass_cnt),1),'.00','') as trans_weekend_pass_cnt
+		      ,round(convert(float,trans_weekday_avg_pass_cnt),2) as trans_weekday_avg_pass_cnt
+		      ,round(convert(float,trans_weekend_avg_pass_cnt),2) as trans_weekend_avg_pass_cnt
+		      ,trans_week_avg_pass_time
+		      ,trans_week_avg_trans_time
+		      ,trans_week_avg_trans_pass
+		      ,trans_week_avg_pass_dis
+		      ,pre_pop_co2_qua
+		      ,replace(convert(varchar,convert(money,pre_road_co2_qua),1),'.00','') as pre_road_co2_qua
+		      ,pre_grdp_road_co2_qua
+		      ,pre_pop_road_poll_qua
+		      ,pre_pop_car_acc_death_cnt
+		      ,pre_tra_culture
+		      ,pre_trans_infra
+		      ,pre_green_trans
+		      ,pre_pop_road_busy
+		      ,pre_trans_per
+		      ,pre_pop_avg_comm_time
+		      ,pre_trans_app
+		      ,round(convert(float,calc_pop_weekday_tra_qua),3) as calc_pop_weekday_tra_qua
+		      ,round(convert(float,calc_pop_weekend_tra_qua),3) as calc_pop_weekend_tra_qua
+		      ,round(convert(float,calc_pop_week_tra_qua),3) as calc_pop_week_tra_qua
+		      ,round(convert(float,calc_pop_parking_area),3) as calc_pop_parking_area
+		      ,round(convert(float,calc_pop_car_own_cnt),3) as calc_pop_car_own_cnt
+		      ,round(convert(float,calc_pop_acc_cnt),3) as calc_pop_acc_cnt
+		      ,round(convert(float,calc_weekday_acc_cnt),3) as calc_weekday_acc_cnt
+		      ,round(convert(float,calc_weekend_acc_cnt),3) as calc_weekend_acc_cnt
+		      ,round(convert(float,calc_pop_own_parking_area),3) as calc_pop_own_parking_area
+		      ,round(convert(float,calc_pop_own_weekday_tra_cnt),3) as calc_pop_own_weekday_tra_cnt
+		      ,round(convert(float,calc_pop_own_weekend_tra_cnt),3) as calc_pop_own_weekend_tra_cnt
+		      ,round(convert(float,calc_pop_own_week_tra_cnt),3) as calc_pop_own_week_tra_cnt
+		      ,calc_pop_sgg_budget
+		      ,round(convert(float,calc_car_own_acc_cnt),3) as calc_car_own_acc_cnt
+		      ,user_id,user_pwd,user_name,user_tel,user_group
+		      ,user_group_new,user_city_code,AUTHORITY,ENABLED,lon,lat ,user_email,login_cnt
+			   FROM CITY_ATTR A, MEMBER B
+			   WHERE A.CITY_CODE = B.USER_CITY_CODE
+				
+			
+			<if test="codecity != null">
+			    <if test="codecity != ''">
+				    AND CITY_MAPPING_CODE IN (${codecity})
+			    </if>
+			</if>
+	</select> 
+
+
+	<select id="getPolicyList" parameterType="hashMap" resultType="hashMap">
+		select distinct code_2, content_2
+			from(
+				select *
+				from policy_recommend a, category_city b
+				where a.code_3 = b.city_number
+				and b.city_group_year = '2015'
+		    	) t
+		where t.code_7 = #{selValue} 
+		and t.city_code = #{cityIDX}
+	</select> 
+
+	
+	<!-- 지표 개선을 위한 정책 추천 - 지표 관련 시행정책 List - 시행효과 및 참고 문헌  -->
+	<select id="getPolicyDetail" parameterType="hashMap" resultType="hashMap">
+		select distinct code_4, content_4, code_5, content_5
+			from(
+				select *
+				from policy_recommend a, category_city b
+				where a.code_3 = b.city_number
+				and b.city_group_year = '2015'
+			    ) t
+		where t.code_7 = #{selValue}
+		and t.city_code = #{cityIDX}
+		and t.code_2 = #{codeVal}
+	</select> 
+
+	
+	<select id="getPolicyCode_1" parameterType="hashMap" resultType="hashMap">
+		select *
+		from policy_code
+		where code_gb = 'code_1'
+		order by content
+	</select> 
+
+	<!-- 정책 효과 분석 - 도시 세부사항 가져오기 -->	
+	<select id="getCitySearch_1" parameterType="hashMap" resultType="hashMap">
+	select  city_idx ,city_name,city_group,city_mapping_code ,city_code
+		  ,tra_total_budget
+	      ,tra_year_budget
+	      ,replace(convert(varchar,convert(money,eco_pop),1),'.00','') as eco_pop
+	      ,replace(convert(varchar,convert(money,eco_area),1),'.00','') as eco_area
+	      ,round(convert(float,eco_pop_density),3) as eco_pop_density
+	      ,replace(convert(varchar,convert(money,tra_car_cnt),1),'.00','') as tra_car_cnt
+	      ,replace(convert(varchar,convert(money,tra_bicycle_budget),1),'.00','') as tra_bicycle_budget
+	      ,replace(convert(varchar,convert(money,tra_parking_cnt),1),'.00','') as tra_parking_cnt
+	      ,replace(convert(varchar,convert(money,tra_parking_area),1),'.00','') as tra_parking_area
+	      ,tra_trans_car
+	      ,tra_trans_bus
+	      ,tra_trans_rail
+	      ,tra_trans_air
+	      ,tra_trans_ship
+	      ,tra_trans_walk
+	      ,tra_trans_bicycle
+	      ,tra_trans_etc
+	      ,replace(convert(varchar,convert(money,tra_yearly_bus),1),'.00','') as tra_yearly_bus
+	      ,replace(convert(varchar,convert(money,tra_yearly_subway),1),'.00','') as tra_yearly_subway
+	      ,eco_aged_ratio
+	      ,tra_bis_trans
+	      ,pri_weekday_traffic
+	      ,pri_weekend_traffic
+	      ,pri_weekday_congest
+	      ,pri_weekend_congest
+	      ,pri_delay_time
+	      ,pri_co2_qua
+	      ,pri_section_acc_cnt
+	      ,pri_section_acc_per
+	      ,replace(convert(varchar,convert(money,tra_sgg_acc_cnt),1),'.00','') as tra_sgg_acc_cnt
+	      ,replace(convert(varchar,convert(money,trans_weekday_pop_cnt),1),'.00','') as trans_weekday_pop_cnt
+	      ,replace(convert(varchar,convert(money,trans_weekend_pop_cnt),1),'.00','') as trans_weekend_pop_cnt
+	      ,replace(convert(varchar,convert(money,trans_weekday_pass_cnt),1),'.00','') as trans_weekday_pass_cnt
+	      ,replace(convert(varchar,convert(money,trans_weekend_pass_cnt),1),'.00','') as trans_weekend_pass_cnt
+	      ,round(convert(float,trans_weekday_avg_pass_cnt),3) as trans_weekday_avg_pass_cnt
+	      ,round(convert(float,trans_weekend_avg_pass_cnt),3) as trans_weekend_avg_pass_cnt
+	      ,trans_week_avg_pass_time
+	      ,trans_week_avg_trans_time
+	      ,trans_week_avg_trans_pass
+	      ,trans_week_avg_pass_dis
+	      ,pre_pop_co2_qua
+	      ,replace(convert(varchar,convert(money,pre_road_co2_qua),1),'.00','') as pre_road_co2_qua
+	      ,pre_grdp_road_co2_qua
+	      ,pre_pop_road_poll_qua
+	      ,pre_pop_car_acc_death_cnt
+	      ,pre_tra_culture
+	      ,pre_trans_infra
+	      ,pre_green_trans
+	      ,pre_pop_road_busy
+	      ,pre_trans_per
+	      ,pre_pop_avg_comm_time
+	      ,pre_trans_app
+	      ,round(convert(float,calc_pop_weekday_tra_qua),3) as calc_pop_weekday_tra_qua
+	      ,round(convert(float,calc_pop_weekend_tra_qua),3) as calc_pop_weekend_tra_qua
+	      ,round(convert(float,calc_pop_week_tra_qua),3) as calc_pop_week_tra_qua
+	      ,round(convert(float,calc_pop_parking_area),3) as calc_pop_parking_area
+	      ,round(convert(float,calc_pop_car_own_cnt),3) as calc_pop_car_own_cnt
+	      ,round(convert(float,calc_pop_acc_cnt),3) as calc_pop_acc_cnt
+	      ,round(convert(float,calc_weekday_acc_cnt),3) as calc_weekday_acc_cnt
+	      ,round(convert(float,calc_weekend_acc_cnt),3) as calc_weekend_acc_cnt
+	      ,round(convert(float,calc_pop_own_parking_area),3) as calc_pop_own_parking_area
+	      ,round(convert(float,calc_pop_own_weekday_tra_cnt),3) as calc_pop_own_weekday_tra_cnt
+	      ,round(convert(float,calc_pop_own_weekend_tra_cnt),3) as calc_pop_own_weekend_tra_cnt
+	      ,round(convert(float,calc_pop_own_week_tra_cnt),3) as calc_pop_own_week_tra_cnt
+	      ,calc_pop_sgg_budget
+	      ,round(convert(float,calc_car_own_acc_cnt),3) as calc_car_own_acc_cnt
+	      ,user_id,user_pwd,user_name,user_tel,user_group
+	      ,user_group_new,user_city_code,AUTHORITY,ENABLED,lon,lat ,user_email,login_cnt
+	FROM CITY_ATTR A, MEMBER B
+	WHERE A.CITY_CODE = B.USER_CITY_CODE
+		
+		
+		<if test="codecity != null">   
+		    <if test="codecity != ''">
+			    AND CITY_MAPPING_CODE IN (${codecity})
+		    </if>
+		</if>
+	</select> 
+
+	<!--정책효과 분석 - 정책소분류 관련 시행정책 List 가져오기  -->
+
+
+	<!--정책효과 분석 - 정책소분류 관련 시행정책 List-시행효과,참고문헌 가져오기  -->
+	<select id="getPolicyDetail_1" parameterType="hashMap" resultType="hashMap">
+		select distinct code_4, content_4, code_5, content_5
+		from(
+			select *
+			from policy_recommend a, category_city b
+			where a.code_3 = b.city_number
+			and b.city_group_year = '2015'
+		    ) t
+		where t.code_1 = #{selValue}
+		and t.city_code = #{cityIDX}
+		and t.code_2 = #{codeVal}
+	</select> 
+
+	<!--정책효과 분석 - 정책소분류 관련 시행정책 List-관련지표 가져오기  -->
+	<select id="getPolicyDetail_2" parameterType="hashMap" resultType="hashMap">
+		select distinct code_7, content_7
+		from(
+			select *
+			from policy_recommend a, category_city b
+			where a.code_3 = b.city_number
+			and b.city_group_year = '2015'
+		    ) t
+		where t.code_1 = #{selValue}
+		and t.city_code = #{cityIDX}
+		and t.code_2 = #{codeVal}
+	</select> 
+	
+	<select id="p_codeList" parameterType="hashMap" resultType="hashMap">
+	    
+		select p_code,policy_name from status_policy
+		where s_code = #{menu5selBox}
+	
+	</select> 
+
+<!-- policy_inventory2 에서 p_code로 검색하여 해당되는 mp_code를 구함  -->
+	<select id="mp_codeList" parameterType="hashMap" resultType="hashMap">
+		DECLARE @var1 float 
+		DECLARE @var2 float 
+		DECLARE @var3 float 
+		DECLARE @var4 float 
+
+		select @var1 = (CAST ( sum(t1.cnt) as float) / CAST ( sum(t1.one) as float) ), @var2 = CAST( SUM(t1.one) as float) from
+		( select mp_code, COUNT(*) as cnt, COUNT(distinct mp_code) as one from policy_inventory2 where mp_code in (select mp_code from policy_inventory2 where p_code = #{p_code}) group by mp_code ) t1
+		
+		
+		
+		select @var3 = sum(devset.dev) / (( CAST ( @var2 as float) ) - CAST ( 1 as float))  from
+		( select mp_code, COUNT(*) as cnt, power( CAST(count(*) as float) - CAST( @var1 as float), 2) as dev from policy_inventory2 where mp_code in (select mp_code from policy_inventory2 where p_code = #{p_code}) group by mp_code ) as devset
+		
+		select @var4 = SQRT(@var3)
+		      
+		select result.mp_code, result.cnt, result.zscore, result.tscore, result.tscore+cityscore.s_1_1_1 as totalscore
+		from 
+		
+			(select mp_code, COUNT(*) as cnt, COUNT(distinct mp_code) as one, (-1 * (COUNT(*) - @var1) / @var4) as zscore, 
+			  ((-1 * (COUNT(*) - @var1) / @var4) * 15 + 70) as tscore 
+			  from policy_inventory2 group by mp_code
+			) as result, 
+		
+		(select mp_code, AVG(${s_code}) as s_1_1_1
+			 from 
+				(select distinct(city_code), mp_code 
+					 from policy_inventory2) as citymp_code, t_score_rate 
+					 where citymp_code.city_code = t_score_rate.city_code group by citymp_code.mp_code
+			) as cityscore
+		
+		where result.mp_code in (select mp_code from policy_inventory2 where p_code = #{p_code}) 
+		      and result.mp_code = cityscore.mp_code 
+		order by result.tscore+cityscore.s_1_1_1 desc;
+	</select> 
+	
+	
+	
+	
+	<select id="p_mp_List" parameterType="hashMap" resultType="hashMap">
+	     
+		select distinct c.policy_name,
+				b.city_name,
+				b.city_mapping_code,
+				a.*,
+				b.eco_pop,d.mp_content  from policy_inventory2 a 
+			join city_attr b  on a.city_code = b.city_code 
+			join status_policy c on a.p_code = c.p_code
+			join category_policy_part2 d on a.mp_code = d.mp_code
+			where p_mp_code = #{p_mp_code}
+			and a.year = #{selectYear}
+			<if test="pop != '0' ">  
+				and b.eco_pop > ${pop}  	
+			</if> 
+		<choose>
+			    <when test="budget == 2">
+                      		<![CDATA[
+                        	and   convert(float,policy_total_budget) <= 30000000 
+          				]]>
+                </when>
+                
+                <when test="budget == 3">
+                    and  policy_total_budget between 30000000 and 50000000		
+                </when>
+                
+                <when test="budget == 4">
+                    	and   policy_total_budget between 50000000 and 100000000
+                </when>
+                
+                <when test="budget == 5">
+                   and policy_total_budget between 100000000 and 300000000			
+                </when>
+                
+                <when test="budget == 6">
+                 	and   policy_total_budget between 300000000 and 500000000		
+				
+                </when>
+                
+                <when test="budget == 7">
+                   and   policy_total_budget between 500000000 and 1000000000		
+                </when>
+                
+                <when test="budget == 8">
+                   <![CDATA[
+     			and   convert(float,policy_total_budget) >= 10000000000   
+				]]>		
+                </when>
+                
+                <otherwise>
+                    
+                </otherwise>
+                </choose>
+ 	<choose>
+        <when test="business_year == 4 ">
+        </when>
+        <when test="business_year == 0 ">
+        </when>
+	<otherwise>
+	     and convert(int,a.policy_end_year) - convert(int,a.policy_start_year) = #{business_year}		
+	</otherwise>                
+    
+	</choose>
+	 
+	  <if test="system_code != 0 ">  
+    			and policy_system_code = #{system_code} 
+    			and policy_enforce_yn = #{enforce_code}
+	</if>  
+
+	</select> 
+	
+	<select id="cnt_p_code" parameterType="String" resultType="String">
+
+	    select count(*) as mp_code_cnt from policy_inventory2
+		where mp_code = #{mp_code}
+	
+	</select> 
+	
+	<select id="policy_detail" parameterType="hashMap" resultType="hashMap">
+	 select a.year, 
+	 		a.policy_code,
+	 		a.city_group,
+	 		a.city_code,
+	 		a.p_mp_code,
+	 		a.mp_code,
+	 		a.policy_title,
+	 		a.p_code,
+	 		replace(convert(varchar,convert(money,isnull(policy_total_budget, '')),1),'.00','') as policy_total_budget,
+      		replace(convert(varchar,convert(money,isnull( policy_year_budget, '')),1),'.00','') as  policy_year_budget,
+			policy_start_year,
+			policy_end_year,
+			policy_system_code,
+			policy_enforce_yn,
+			isnull(policy_means, '')as policy_means,
+			isnull(policy_business_intro_background, '')as policy_business_intro_background,
+			isnull(policy_business_effect, '')as policy_business_effect,
+			isnull(policy_business_class, '')as policy_business_class, 
+			b.city_name
+			from policy_inventory2 a 
+			join city_attr b 
+			on a.city_code = b.city_code
+	 		where policy_code = #{policy_code}
+	 		and a.year =#{selectYear}
+	</select> 
+	
+	
+	
+	
+	<!--2016이후  -->
+	<select id="mp_codeList_2016" parameterType="hashMap" resultType="hashMap">
+		DECLARE @var1 float 
+		DECLARE @var2 float 
+		DECLARE @var3 float 
+		DECLARE @var4 float 
+
+		select @var1 = (CAST ( sum(t1.cnt) as float) / CAST ( sum(t1.one) as float) ), @var2 = CAST( SUM(t1.one) as float) from
+		( select mp_code, COUNT(*) as cnt, COUNT(distinct mp_code) as one from policy_inventory2 where mp_code in (select mp_code from policy_inventory2 where p_code = #{p_code}) group by mp_code ) t1
+		
+		
+		
+		select @var3 = sum(devset.dev) / (( CAST ( @var2 as float) ) - CAST ( 1 as float))  from
+		( select mp_code, COUNT(*) as cnt, power( CAST(count(*) as float) - CAST( @var1 as float), 2) as dev from policy_inventory2 where mp_code in (select mp_code from policy_inventory2 where p_code = #{p_code}) group by mp_code ) as devset
+		
+		select @var4 = SQRT(@var3)
+		      
+		select result.mp_code, result.cnt, result.zscore, result.tscore, result.tscore+cityscore.s_1_1_1 as totalscore
+		from 
+		
+			(select mp_code, COUNT(*) as cnt, COUNT(distinct mp_code) as one, (-1 * (COUNT(*) - @var1) / @var4) as zscore, 
+			  ((-1 * (COUNT(*) - @var1) / @var4) * 15 + 70) as tscore 
+			  from policy_inventory2 group by mp_code
+			) as result, 
+		
+		(select mp_code, AVG(${s_code}) as s_1_1_1
+			 from 
+				(select distinct(city_code), mp_code 
+					 from policy_inventory2) as citymp_code, t_score_rate2016 
+					 where citymp_code.city_code = t_score_rate2016.city_code group by citymp_code.mp_code
+			) as cityscore
+		
+		where result.mp_code in (select mp_code from policy_inventory2 where p_code = #{p_code}) 
+		      and result.mp_code = cityscore.mp_code 
+		order by result.tscore+cityscore.s_1_1_1 desc;
+	</select> 
+	
+	
+	
+	
+	<select id="p_mp_List_2016" parameterType="hashMap" resultType="hashMap">
+	    
+	select distinct b.city_name,
+				a.year,	a.policy_code,
+				a.city_group,a.city_code,
+				a.p_mp_code, a.mp_code,
+				a.policy_title,	a.p_code,
+				round(a.policy_total_budget,0) as policy_total_budget ,
+				round(a.policy_year_budget,0) as policy_year_budget, 
+				a.policy_start_year,
+				a.policy_end_year,
+				a.policy_system_code,
+				a.policy_enforce_yn,
+				replace(a.etc, 'NULL', '-') as etc,
+				replace(a.policy_means_etc, 'null', '-') as policy_means_etc,
+				a.policy_means,
+				b.eco_pop,
+				b.city_mapping_code,
+				c.policy_name,
+				d.mp_content  from policy_inventory2016 a 
+		join city_attr b  on a.city_code = b.city_code 
+		join status_policy c on a.p_code = c.p_code
+		join category_policy_part2 d on a.mp_code = d.mp_code
+		where p_mp_code = #{p_mp_code}
+		and a.year = #{selectYear}
+
+			<if test="pop != '0' ">  
+				and b.eco_pop > ${pop}  	
+			</if> 
+
+		 <choose>
+			    <when test="budget == 2">
+                      		<![CDATA[
+                        	and   convert(float,policy_total_budget) <= 30 
+          				]]>
+                </when>
+                
+                <when test="budget == 3">
+                    and  policy_total_budget between 30 and 50		
+                </when>
+                
+                <when test="budget == 4">
+                    	and   policy_total_budget between 50 and 100
+                </when>
+                
+                <when test="budget == 5">
+                   and policy_total_budget between 100 and 300			
+                </when>
+                
+                <when test="budget == 6">
+                 	and   policy_total_budget between 300 and 500		
+				
+                </when>
+                
+                <when test="budget == 7">
+                   and   policy_total_budget between 500 and 1000		
+                </when>
+                
+                <when test="budget == 8">
+                   <![CDATA[
+     			and   convert(float,policy_total_budget) >= 1000   
+				]]>		
+                </when>
+                
+                <otherwise>
+                    
+                </otherwise>
+                </choose>
+ 	
+ 	<choose>
+        
+        <when test="business_year == 4 ">
+        </when>
+        <when test="business_year == 0 ">
+        </when>
+	<otherwise>
+	     and convert(int,a.policy_end_year) - convert(int,a.policy_start_year) = #{business_year}		
+	</otherwise>                
+    
+	</choose>
+	 
+	  <if test="system_code != 0 ">  
+    			and policy_system_code = #{system_code} 
+    			and policy_enforce_yn = #{enforce_code}
+	</if>  
+
+
+	</select> 
+	
+	<select id="policy_detail_2016" parameterType="hashMap" resultType="hashMap">
+
+	    select 
+ 			a.year,
+ 			a.policy_code,
+ 			a.city_group,
+ 			a.city_code,
+ 			a.p_mp_code,
+ 			a.mp_code,
+ 			a.policy_title,
+ 			a.p_code,
+			replace(a.etc, 'NULL', '-') as etc,
+			replace(a.policy_means_etc, 'null', '-') as way_text,
+ 			replace(convert(varchar,convert(money,isnull(a.policy_total_budget, '')),1),'.00','') as policy_total_budget,
+      		replace(convert(varchar,convert(money,isnull(a.policy_year_budget, '')),1),'.00','') as  policy_year_budget,
+			isnull(a.policy_start_year,'') as policy_start_year,
+			isnull(a.policy_end_year,'') as policy_end_year,
+			isnull(a.policy_system_code,'') as policy_system_code,
+			isnull(a.policy_enforce_yn,'') as policy_enforce_yn ,
+			isnull(a.policy_means,'') as policy_means ,
+			b.city_name
+			,c.idx
+			,c.content_1
+		from policy_inventory2016 a 
+		join city_attr b on a.city_code = b.city_code
+	 	join policy_inventory_collection c on a.policy_code = c.board_idx
+	 	where policy_code = #{policy_code}
+	 	and a.year =#{selectYear}
+
+	</select> 
+	
+	
+	<select id="menu5_1_p_codeList" parameterType="hashMap" resultType="hashMap">
+  		select distinct policy_name,p_code from status_policy
+    		group by p_code,policy_name
+  			order by p_code
+	</select> 
+	
+	<select id="menu5_1_mp_codeList" parameterType="hashMap" resultType="hashMap">
+  		select mp_code ,mp_content from p_mp_code
+			where p_code = #{p_code}
+	</select> 
+	
+	<select id="menu5_1_citysearch" parameterType="hashMap" resultType="hashMap">
+			select distinct t. city_mapping_code,t.city_code,t.city_name from 
+			(select c.city_name,c.city_mapping_code,r.* from policy_recommend2 r join city_attr c on r.city_code = c.city_code 		
+	    	 where code2 like '${selectVal}%' ) t
+
+	</select> 
+	
+	
+		<select id="getPolicyList_1" parameterType="hashMap" resultType="hashMap">
+				select b.city_name,a.* from policy_recommend2 a
+				join city_attr b 
+				on a.city_code = b.city_code
+				where code2 like '${selValue}%'     
+				and a.city_code = #{city_code}
+	</select> 
+		<select id="getPolicyList_2" parameterType="hashMap" resultType="hashMap">
+				select b.city_name,a.* from policy_recommend2 a
+				join city_attr b 
+				on a.city_code = b.city_code
+				where code2 like '${selValue}%'     
+				and a.city_code = #{city_code}
+				and a.policy_code = #{policy_code}
+	</select> 
+	
+		<select id="selectFileInfo" parameterType="hashmap" resultType="hashmap">
+	    	select code4,code4_content from policy_recommend2 
+			WHERE policy_code = #{IDX}
+	</select>
+	 <select id="s_code_search" parameterType="hashmap" resultType="hashmap">
+			select a.s_code,a.status_name from status_policy a join p_mp_code b on a.p_code = b.p_code
+			where a.p_code = #{selValue2} and b.mp_code =#{selValue}
+	</select>
+	
+	 <select id="menu5_1_rate" parameterType="hashmap" resultType="hashmap">
+				select b.city_name,a.*,${s_codelist} from policy_recommend2 a
+				join city_attr b 
+				on a.city_code = b.city_code
+				join t_score_rate c
+				on a.city_code = c.city_code
+				where code2 like '${selValue}%'     
+				and a.city_code = #{city_code}  
+				and a.policy_code = #{policy_code}
+	</select>
+
+	 
+ </mapper>

@@ -1,0 +1,16 @@
+.rMateH5__Root  {
+	-moz-box-sizing : border-box;
+	-webkit-box-sizing : border-box;
+	box-sizing : border-box;
+}
+.rMateH5__Root * {
+	-moz-box-sizing : border-box;
+	-webkit-box-sizing : border-box;
+	box-sizing : border-box;
+}
+
+.rMateH5__MapChart {
+	font-family : "맑은 고딕", 돋움, Verdana;
+	font-size : 12px;
+	line-height : normal;
+}

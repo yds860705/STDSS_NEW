@@ -1,0 +1,98 @@
+@charset "utf-8";
+/* @import url(normalize.css);
+@import url(common.css); */
+@font-face{
+        font-family: "nanum";
+            src:url(../fonts/NanumBarunGothic.eot);
+            src:url(../fonts/NanumBarunGothic.eot?#iefix) format('embedded-opentype'),
+                url(../fonts/NanumBarunGothic.woff) format('woff'),
+                url(../fonts/NanumBarunGothic.ttf) format('truetype')
+        };
+
+
+body,h1,h2,h3,h4,input,button {
+	font-family:NanumBarunGothic,Malgun Gothic,맑은 고딕, Verdana,Arial, '돋움', Dotum;
+	
+}
+
+.login{
+	padding-top:270px;
+}
+.log_logo{
+	padding:30px 0;
+}
+.log_con{
+	background:url(../img/log_bg.png) 0 0 no-repeat;
+	padding:35px 0%;
+	margin:0 auto;
+	text-align:center;
+	
+
+}
+.login_form{
+	position:relative;
+}
+
+.input_box{
+	position:relative; 
+	margin-top:20px;
+	width:50px;
+	float: left;
+	margin-left: 170px;
+} 
+.login_form .login_txt .input_box>input{
+	width:180px;
+	font-size:12px; 
+	color:#000000;
+	padding:9px 10px;
+	position:relative;
+	background:#E8E8E8;
+	border:none;
+	border-radius:3px;
+}
+.login_form .login_txt .input_box>label{
+	position:absolute;
+	top:2;
+	left:10px;
+	z-index:100;
+	width:180px;
+	text-align:left;
+	 
+}
+.login_form .login_txt .input_box>label.none{
+	display:none;
+}
+.login_form .login_txt .input_box>label .id_icon{
+	margin-top:6px;
+	padding-left:0px;
+	font-size:13px;
+	font-weight:100;
+	color:#000000; 
+	display:block;
+	opacity:0.7;
+}
+.login_form .login_txt .input_box>label .pw_icon{
+	padding-left:0px;
+	font-size:13px;
+	font-weight:100;
+	color:#000000;
+	display:block;
+	margin-top:6px;
+	opacity:0.7;
+}
+.input_submit{
+	position:absolute;
+	top:0px;
+	left:280px
+}
+.input_submit input{
+	width:98px;
+	height:80px;
+	background:url(../img/login_btn.png) 0 0 no-repeat;
+	border:none;
+	text-indent:-99999px;
+}
+
+.log_footer{
+	margin-top:20px;
+}

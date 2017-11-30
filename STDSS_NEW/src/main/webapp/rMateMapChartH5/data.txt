@@ -1,0 +1,1 @@
+﻿{"branchCode":100, "branchName":"강원지점", "v":2, "h":30, "address":"강원 강릉시 포남동 1109"},

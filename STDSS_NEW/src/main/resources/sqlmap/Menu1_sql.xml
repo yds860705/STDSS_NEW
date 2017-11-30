@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="menu1">
+ 	
+	<select id="getCityList" resultType="hashMap">
+		SELECT city_name, city_group, city_code, city_number
+		FROM CATEGORY_CITY
+		ORDER BY CITY_NUMBER
+	</select> 
+
+	<!--도시별 평가 결과 조회 search - round 소수점 없애기  -->
+	<select id="menu1_0_Search" parameterType="hashMap" resultType="hashMap">
+		  select 
+				city_name, city_group, b.city_code, a.city_number as city_number, 
+				round(estimation_transformed_score, 0) as estimation_transformed_score, 
+				isnull(round(env_present_1,0),0) as env_present_1, 
+				isnull(round(env_present_2, 0),0) as env_present_2,
+				isnull(round(env_present_3, 0),0) as env_present_3,
+				isnull(round(env_present_4, 0),0) as env_present_4, 
+				isnull(round(env_present_5,0),0) as env_present_5, 
+				isnull(round(env_present_6, 0),0) as env_present_6,
+				isnull(round(env_present_7, 0),0) as env_present_7,
+				isnull(round(env_present_8, 0),0) as env_present_8, 
+				isnull(round(env_policy_1, 0),0) as env_policy_1,
+				isnull(round(env_policy_2, 0),0) as env_policy_2,
+				isnull(round(env_policy_3, 0),0) as env_policy_3,
+				isnull(round(env_policy_4, 0),0) as env_policy_4, 
+			    isnull(round(soc_present_1, 0),0) as soc_present_1,
+			    isnull(round(soc_present_2, 0),0) as soc_present_2,
+			    isnull(round(soc_present_3, 0),0) as soc_present_3,
+			    isnull(round(soc_present_4, 0),0) as soc_present_4, 
+			    isnull(round(soc_present_5, 0),0) as soc_present_5,
+			    isnull(round(soc_present_6, 0),0) as soc_present_6,
+			    isnull(round(soc_present_7, 0),0) as soc_present_7,
+			    isnull(round(soc_present_8, 0),0) as soc_present_8, 
+			    isnull(round(soc_policy_1, 0),0) as soc_policy_1,
+			    isnull(round(soc_policy_2, 0),0) as soc_policy_2,
+			    isnull(round(soc_policy_3, 0),0) as soc_policy_3,
+			    isnull(round(soc_policy_4, 0),0) as soc_policy_4, 
+			    isnull(round(eco_present_1, 0),0) as eco_present_1,
+			    isnull(round(eco_present_2, 0),0) as eco_present_2,
+			    isnull(round(eco_present_3, 0),0) as eco_present_3,
+			    isnull(round(eco_present_4, 0),0) as eco_present_4, 
+			    isnull(round(eco_policy_1, 0),0) as eco_policy_1,
+			    isnull(round(eco_policy_2, 0),0) as eco_policy_2,
+			    isnull(round(eco_policy_3, 0),0) as eco_policy_3,
+			    round(eco_policy_4, 0) as eco_policy_4, 
+			    group_rank, total_rank, score_grade
+		from category_city a, policy_estimation b
+		where a.city_number = b.city_number
+		and b.estimation_year = #{searchYear}
+		and b.city_code = #{cityCode}
+		and a.city_group_year = #{searchYear}
+		order by a.city_number
+	</select> 
+
+	<!-- 도시별 평가 결과 비교 search -->
+	<select id="menu1_1_Search" parameterType="hashMap" resultType="hashMap">
+		select 
+				city_name, city_group, b.city_code, a.city_number as city_number, round(estimation_transformed_score, 0) as estimation_transformed_score, 
+				isnull(round(env_present_1,0),0) as env_present_1, 
+				isnull(round(env_present_2, 0),0) as env_present_2,
+				isnull(round(env_present_3, 0),0) as env_present_3,
+				isnull(round(env_present_4, 0),0) as env_present_4, 
+				isnull(round(env_present_5,0),0) as env_present_5, 
+				isnull(round(env_present_6, 0),0) as env_present_6,
+				isnull(round(env_present_7, 0),0) as env_present_7,
+				isnull(round(env_present_8, 0),0) as env_present_8, 
+				isnull(round(env_policy_1, 0),0) as env_policy_1,
+				isnull(round(env_policy_2, 0),0) as env_policy_2,
+				isnull(round(env_policy_3, 0),0) as env_policy_3,
+				isnull(round(env_policy_4, 0),0) as env_policy_4, 
+			    isnull(round(soc_present_1, 0),0) as soc_present_1,
+			    isnull(round(soc_present_2, 0),0) as soc_present_2,
+			    isnull(round(soc_present_3, 0),0) as soc_present_3,
+			    isnull(round(soc_present_4, 0),0) as soc_present_4, 
+			    isnull(round(soc_present_5, 0),0) as soc_present_5,
+			    isnull(round(soc_present_6, 0),0) as soc_present_6,
+			    isnull(round(soc_present_7, 0),0) as soc_present_7,
+			    isnull(round(soc_present_8, 0),0) as soc_present_8, 
+			    isnull(round(soc_policy_1, 0),0) as soc_policy_1,
+			    isnull(round(soc_policy_2, 0),0) as soc_policy_2,
+			    isnull(round(soc_policy_3, 0),0) as soc_policy_3,
+			    isnull(round(soc_policy_4, 0),0) as soc_policy_4, 
+			    isnull(round(eco_present_1, 0),0) as eco_present_1,
+			    isnull(round(eco_present_2, 0),0) as eco_present_2,
+			    isnull(round(eco_present_3, 0),0) as eco_present_3,
+			    isnull(round(eco_present_4, 0),0) as eco_present_4, 
+			    isnull(round(eco_policy_1, 0),0) as eco_policy_1,
+			    isnull(round(eco_policy_2, 0),0) as eco_policy_2,
+			    isnull(round(eco_policy_3, 0),0) as eco_policy_3,
+			    isnull(round(eco_policy_4, 0),0) as eco_policy_4, 
+			    group_rank, total_rank, score_grade
+		from category_city a, policy_estimation b
+		where a.city_number = b.city_number
+		and estimation_year = #{estimationYear}
+		and a.city_group_year = #{estimationYear}
+		and b.city_code = #{cityCode}
+		order by a.city_number
+	</select> 
+
+	<!--도시별 평가 결과 비교   - 비고란 등급 셋팅  -->
+	<select id="menu1_1_Search_Remark" parameterType="hashMap" resultType="hashMap">
+	    <![CDATA[
+		select city_name, total_rank as rank
+		from(
+			select top 1
+				city_name, total_rank
+			from policy_estimation a, category_city b
+			where a.city_code = b.city_code
+		    and estimation_year = #{estimationYear}
+		    and b.city_group_year = #{estimationYear}
+			and a.city_code in (${cityCodeParam})
+		    order by total_rank 
+		) t
+		union all
+		select city_name, group_rank as rank
+		from(
+			select top 1
+				city_name, group_rank
+			from policy_estimation a, category_city b
+			where a.city_code = b.city_code
+			and estimation_year = #{estimationYear}
+			and b.city_group_year = #{estimationYear}
+			and a.city_code in (${cityCodeParam})
+		    order by group_rank 
+		) t
+		union all
+		select city_name, env_present_1 as rank
+		from(
+			select top 1 
+				city_name, convert(nvarchar(50) , round(env_present_1,0)) as env_present_1
+			from policy_estimation a, category_city b
+			where a.city_code = b.city_code
+			and estimation_year = #{estimationYear}
+			and b.city_group_year = #{estimationYear}
+			and a.city_code in (${cityCodeParam})
+		    order by env_present_1 
+		) t
+		union all
+		select city_name, env_present_2 as rank
+		from(
+			select top 1
+				city_name, convert(nvarchar(50) , round(env_present_2,0)) as env_present_2
+			from policy_estimation a, category_city b
+			where a.city_code = b.city_code
+			and estimation_year = #{estimationYear}
+			and b.city_group_year = #{estimationYear}
+			and a.city_code in (${cityCodeParam})
+		    order by env_present_2  desc 
+		) t
+		]]>  
+	</select> 
+	
+    <!--평가 지표별 결과 비교  - 연도별 부문 평가 결과  - highchart 각 지표별    -->
+	<select id="menu1_2_Search_BoxPlot" parameterType="hashMap" resultType="hashMap">
+	
+			select 
+			ROUND(MIN(convert(float,  ${columnName})), 1) AS 'min',
+			round((select min(convert(float, ${columnName})) from  
+			(SELECT  TOP 25 PERCENT ${columnName} FROM    policy_estimation  WHERE   ${columnName} is NOT NULL and estimation_year=#{selectYear} order by convert(float,${columnName}) desc )as upper),1) as upper,
+			round((select min(convert(float,  ${columnName})) from  
+			(SELECT  TOP 50 PERCENT  ${columnName} FROM    policy_estimation  WHERE   ${columnName} is NOT NULL and estimation_year=#{selectYear} order by convert(float,${columnName}) desc )as median),1) as median,
+			round((select min(convert(float,  ${columnName})) from  
+			(SELECT  TOP 75 PERCENT  ${columnName} FROM    policy_estimation  WHERE   ${columnName} is NOT NULL and estimation_year=#{selectYear} order by convert(float,${columnName}) desc )as lower),1) as lower,
+			ROUND(MAX(convert(float,  ${columnName})), 1) AS 'max'
+			from policy_estimation
+			where estimation_year =#{selectYear}
+		
+	</select> 	
+	
+	<!-- 평가지표별 결과 비교 - 최종 search  -->
+	<select id="menu1_2_Search" parameterType="hashMap" resultType="hashMap">
+		select b.city_name as city_name, round(${indicatorVal}, 0) result_data
+		from policy_estimation a, category_city b
+		where a.city_code = b.city_code
+		and b.city_group = #{conGroup}
+		and b.city_group_year = #{selectYear}
+		and a.estimation_year = #{selectYear}
+			</select> 	
+	
+	<!-- policy_estimation 에서 각 컬럼네임 가져오기 -->
+	<select id="getStdssIndicatorColumn" resultType="hashMap">
+ 	    SELECT category_column_name
+		FROM CATEGORY_BASE
+		ORDER BY category_code_2, category_index * 1
+ 	</select>
+ 	
+	<select id="menu1_4_Search" parameterType="hashMap" resultType="hashMap">
+		select * from awards_result 
+		where year = #{selectYear} 	
+	</select> 	
+	
+	<select id="menu1_0_column_search" parameterType="hashMap" resultType="hashMap">
+			select * from  category_legend 	
+			where year =${selectYear}
+	</select> 	
+	
+	<select id="menu1_3submission_List" parameterType="hashMap" resultType="hashMap">
+	
+		  select * from award_file 
+		  where idx = #{selectVal}
+		  and year =#{selectYear}
+		  and type_chk = #{type_chk}
+					
+	</select> 	
+	
+   <select id="selectFileInfo" parameterType="hashmap" resultType="hashmap">
+	    <![CDATA[
+	        SELECT
+	            STORED_FILE_NAME,
+	            ORIGINAL_FILE_NAME
+	        FROM
+	            award_file
+	        WHERE
+	            year = #{selectYear} and
+	             idx = #{selectList} and
+	    		type_chk = #{type_chk}
+	    
+	    ]]>
+	</select>
+ </mapper>

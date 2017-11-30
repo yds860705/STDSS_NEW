@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="menu3">
+ 	
+	<select id="menu3_0_List_TotalCount" parameterType="int" resultType="int">
+		
+	</select> 
+
+	
+	<!--도시.교통속성정보 조회  - 그룹별 도시 세부 정보 검색 -->
+	<!--replace 천단위 단위 설정-->
+	<!--round 소수점 둘째자리로  -->
+	<select id="getCitySearch" parameterType="hashMap" resultType="hashMap">
+	  select  city_idx ,city_name,city_group,city_mapping_code ,city_code
+			  ,tra_total_budget
+		      ,tra_year_budget
+		      ,replace(convert(varchar,convert(money,eco_pop),1),'.00','') as eco_pop
+		      ,replace(convert(varchar,convert(money,eco_area),1),'.00','') as eco_area
+		      ,round(convert(float,eco_pop_density),3) as eco_pop_density
+		      ,replace(convert(varchar,convert(money,tra_car_cnt),1),'.00','') as tra_car_cnt
+		      ,replace(convert(varchar,convert(money,tra_bicycle_budget),1),'.00','') as tra_bicycle_budget
+		      ,replace(convert(varchar,convert(money,tra_parking_cnt),1),'.00','') as tra_parking_cnt
+		      ,replace(convert(varchar,convert(money,tra_parking_area),1),'.00','') as tra_parking_area
+		      ,tra_trans_car
+		      ,tra_trans_bus
+		      ,tra_trans_rail
+		      ,tra_trans_air
+		      ,tra_trans_ship
+		      ,tra_trans_walk
+		      ,tra_trans_bicycle
+		      ,tra_trans_etc
+		      ,replace(convert(varchar,convert(money,tra_yearly_bus),1),'.00','') as tra_yearly_bus
+		      ,replace(convert(varchar,convert(money,tra_yearly_subway),1),'.00','') as tra_yearly_subway
+		      ,eco_aged_ratio
+		      ,tra_bis_trans
+		      ,pri_weekday_traffic
+		      ,pri_weekend_traffic
+		      ,pri_weekday_congest
+		      ,pri_weekend_congest
+		      ,pri_delay_time
+		      ,pri_co2_qua
+		      ,pri_section_acc_cnt
+		      ,pri_section_acc_per
+		      ,replace(convert(varchar,convert(money,tra_sgg_acc_cnt),1),'.00','') as tra_sgg_acc_cnt
+		      ,replace(convert(varchar,convert(money,trans_weekday_pop_cnt),1),'.00','') as trans_weekday_pop_cnt
+		      ,replace(convert(varchar,convert(money,trans_weekend_pop_cnt),1),'.00','') as trans_weekend_pop_cnt
+		      ,replace(convert(varchar,convert(money,trans_weekday_pass_cnt),1),'.00','') as trans_weekday_pass_cnt
+		      ,replace(convert(varchar,convert(money,trans_weekend_pass_cnt),1),'.00','') as trans_weekend_pass_cnt
+		      ,round(convert(float,trans_weekday_avg_pass_cnt),2) as trans_weekday_avg_pass_cnt
+		      ,round(convert(float,trans_weekend_avg_pass_cnt),2) as trans_weekend_avg_pass_cnt
+		      ,trans_week_avg_pass_time
+		      ,trans_week_avg_trans_time
+		      ,trans_week_avg_trans_pass
+		      ,trans_week_avg_pass_dis
+		      ,pre_pop_co2_qua
+		      ,replace(convert(varchar,convert(money,pre_road_co2_qua),1),'.00','') as pre_road_co2_qua
+		      ,pre_grdp_road_co2_qua
+		      ,pre_pop_road_poll_qua
+		      ,pre_pop_car_acc_death_cnt
+		      ,pre_tra_culture
+		      ,pre_trans_infra
+		      ,pre_green_trans
+		      ,pre_pop_road_busy
+		      ,pre_trans_per
+		      ,pre_pop_avg_comm_time
+		      ,pre_trans_app
+		      ,round(convert(float,calc_pop_weekday_tra_qua),2) as calc_pop_weekday_tra_qua
+		      ,round(convert(float,calc_pop_weekend_tra_qua),2) as calc_pop_weekend_tra_qua
+		      ,round(convert(float,calc_pop_week_tra_qua),2) as calc_pop_week_tra_qua
+		      ,round(convert(float,calc_pop_parking_area),2) as calc_pop_parking_area
+		      ,round(convert(float,calc_pop_car_own_cnt),2) as calc_pop_car_own_cnt
+		      ,round(convert(float,calc_pop_acc_cnt),2) as calc_pop_acc_cnt
+		      ,round(convert(float,calc_weekday_acc_cnt),2) as calc_weekday_acc_cnt
+		      ,round(convert(float,calc_weekend_acc_cnt),2) as calc_weekend_acc_cnt
+		      ,round(convert(float,calc_pop_own_parking_area),2) as calc_pop_own_parking_area
+		      ,round(convert(float,calc_pop_own_weekday_tra_cnt),2) as calc_pop_own_weekday_tra_cnt
+		      ,round(convert(float,calc_pop_own_weekend_tra_cnt),2) as calc_pop_own_weekend_tra_cnt
+		      ,round(convert(float,calc_pop_own_week_tra_cnt),2) as calc_pop_own_week_tra_cnt
+		      ,calc_pop_sgg_budget
+		      ,round(convert(float,calc_car_own_acc_cnt),2) as calc_car_own_acc_cnt
+     
+		FROM CITY_ATTR A
+		WHERE city_code = #{city_code}
+	<!-- 	
+		<if test="groupCode != 'noVal'">
+			AND CITY_GROUP = #{groupCode}
+		</if>
+		<if test="cityName != null">
+		    <if test="cityName != ''">
+			    AND CITY_NAME LIKE ('%'+ #{cityName}+'%')
+		    </if>
+		</if> -->
+	</select> 
+
+	<!-- 도시.교통속성정보 비교 - 비교속성 및 도시 선택후 세부정보 가져오기  -->
+	<select id="compareAttr" parameterType="hashMap" resultType="hashMap">
+		SELECT city_idx, city_name, city_group, city_mapping_code, city_code, ${columnGroup}
+		FROM CITY_ATTR
+		WHERE CITY_CODE IN (${cityGroup})
+	</select> 
+
+	<!--도시.교통속성정보 비교 - 비교대상 정보값 가져오기  -->
+	<select id="getAttrInfo" parameterType="hashMap" resultType="hashMap">
+		SELECT * 
+		FROM city_attr_info
+		where column_name in (${colGroupStr})
+		order by column_idx
+	</select> 
+
+	
+	<select id="getCityAttrChart" parameterType="hashMap" resultType="hashMap">
+		select city_name, city_group, city_code, ${columnName} as cityVar, column_content
+		from city_attr a, city_attr_info b
+		where a.city_code in (${cityList})
+		and b.column_name = #{columnName}
+		order by city_idx
+	</select> 
+	
+	
+	<!-- 도시.교통속성정보 조회 - 세부사항 엑셀로 다운  -->
+	<select id="excelList" parameterType="hashMap" resultType="hashMap">
+	select 
+		city_name,tra_total_budget,tra_year_budget,eco_pop,eco_area,eco_pop_density,tra_car_cnt,tra_bicycle_budget,tra_parking_cnt
+		,tra_parking_area,tra_trans_car,tra_trans_bus,tra_trans_rail,tra_trans_air,tra_trans_ship,tra_trans_walk,tra_trans_bicycle,tra_trans_etc
+		,tra_yearly_bus,tra_yearly_subway,eco_aged_ratio,tra_bis_trans,tra_sgg_acc_cnt,trans_weekday_pop_cnt,trans_weekend_pop_cnt,trans_weekday_pass_cnt,trans_weekend_pass_cnt
+		,trans_weekday_avg_pass_cnt,trans_weekend_avg_pass_cnt,trans_week_avg_pass_time,trans_week_avg_trans_time,trans_week_avg_trans_pass,trans_week_avg_pass_dis,pre_pop_co2_qua,pre_road_co2_qua,pre_grdp_road_co2_qua
+		,pre_pop_road_poll_qua,pre_pop_car_acc_death_cnt,pre_tra_culture,pre_trans_infra,pre_green_trans,pre_pop_road_busy,pre_trans_per,pre_pop_avg_comm_time,pre_trans_app,
+		calc_pop_weekday_tra_qua,calc_pop_weekend_tra_qua,calc_pop_week_tra_qua,calc_pop_parking_area,calc_pop_car_own_cnt,calc_pop_acc_cnt,calc_weekday_acc_cnt,calc_weekend_acc_cnt,
+		calc_week_acc_cnt,calc_pop_own_parking_area,calc_pop_own_weekday_tra_cnt,calc_pop_own_weekend_tra_cnt,calc_pop_own_week_tra_cnt,calc_pop_sgg_budget,calc_car_own_acc_cnt
+	from city_attr
+	where city_name = #{cityname}
+	</select>
+	
+
+ </mapper>

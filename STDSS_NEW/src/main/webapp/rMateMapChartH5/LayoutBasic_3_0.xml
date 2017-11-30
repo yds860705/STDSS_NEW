@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rMateMapChart>
+	<MapChart id="mainMap1"   showDataTips="false" dataTipJsFunction="dataTipFunction" mapChangeJsFunction="clickFunction"  itemClickJsFunction="itemClickFunction"
+			color="#FFFFFF" fontSize="14" fontFamily="맑은 고딕" fontWeight="bold"   >
+		<series>
+			  <MapSeries id="mapseries" labelJsFunction="labelFunc" interactive="true" 
+			      hideOverSizeLabel ="false"  selectionMarking="blink"
+			       labelPosition="inside" displayName="map" localFillJsFunction="colorFunction">				
+				<filters>
+					<DropShadowFilter distance="2" angle="45" color="#888888"/>
+				</filters>
+				<stroke>
+					<Stroke color="#CECECE" weight="0.8" alpha="1"/>
+				</stroke>
+				
+				 <rollOverFill>					
+                            <LinearGradient angle="-45">						
+                                <entries>							
+                                    <GradientEntry color="#9BF9FF" ratio="0.0"/>							
+                                    <GradientEntry color="#9BF9FF" ratio="0.5"/>						
+                                </entries>					
+                            </LinearGradient>				
+                        </rollOverFill>			
+			</MapSeries>
+		</series>
+	   <annotationElements mouseWheelEnabled="true" showZoomControls ="true">
+                  <MapNavigator/>		
+       </annotationElements>	
+	</MapChart>
+</rMateMapChart>
+

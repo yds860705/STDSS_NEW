@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="helpDesk">
+ 	
+ 	<!--헬프데스크 게시판 첫 리스트 화면   -->
+ 	<!-- mysql 경우 row_num을 이용한 순번처리 -->
+	<select id ="HelpDesk_List" parameterType="hashMap" resultType="hashMap">
+    
+    	select * from
+	    (SELECT
+	    	(SELECT COUNT(*) 
+			FROM helpDesk
+		    where DEL_GB = 'N'
+			<if test="SEARCHTXT != NULL ">  
+			<if test="SEARCHTXT != ''">  
+  			     AND content1 LIKE ('%'+#{SEARCHTXT}+'%')  
+    		</if>  
+			</if>
+			) as TOTAL_COUNT,
+			
+				Row_Number() Over ( Order By idx desc) as rnum,
+				IDX, TITLE, CONTENT1, HIT_CNT,CREA_DTM,user_id
+				FROM helpDesk
+				where DEL_GB = 'N'
+			<if test="SEARCHTXT != NULL ">  
+			<if test="SEARCHTXT != ''">  
+  			    AND CONTENT1 LIKE ('%'+#{SEARCHTXT}+'%') 
+    		</if>  
+			</if>
+			) t1	     
+		 	where rnum between ${START}  AND  ${END} 
+		ORDER BY IDX DESC
+	</select> 
+
+	<!-- 헬프데스크 글쓰기  -->
+	<insert id="insertHelpDesk" parameterType="hashmap" useGeneratedKeys="true" keyProperty="IDX">
+		INSERT INTO HELPDESK(title,content1,crea_dtm, hit_cnt, del_gb,user_id) 
+	    VALUES
+	    (
+		    #{title},
+		    #{content1},
+			getdate(),
+			0,     
+			'N',
+			#{user_id}
+	    )
+		<selectKey keyProperty="IDX" resultType="string" order="AFTER">
+			SELECT MAX(IDX) FROM HELPDESK
+		</selectKey>
+	</insert>
+    <!-- 헬프데스크 조회수 +1 -->
+     <update id="updateHitCnt" parameterType="hashmap">
+		<![CDATA[
+			UPDATE helpdesk 
+			SET
+				HIT_CNT = ISNULL(HIT_CNT, 0) + 1
+			WHERE
+				IDX = #{IDX}	
+		]]>
+	</update>
+	
+	<!-- 헬프데스크 디테일 화면  -->  
+    <select id="getHelpDeskDetail" parameterType="hashmap" resultType="hashmap">
+        select *
+		from helpdesk
+        where idx = #{IDX}
+    </select>
+    
+    <!-- 헬프데스크 글삭제 -->
+     <update id="deleteHelpDesk" parameterType="hashmap">
+		<![CDATA[
+			UPDATE helpdesk
+			SET
+				DEL_GB = 'Y'
+			WHERE
+				IDX = #{IDX}
+		]]>
+	</update>
+	<!--헬프데스크 굴 수정  -->
+	<update id="updateHelpDesk" parameterType="hashmap">
+	      	UPDATE helpdesk SET
+	      	
+	      	title = #{title},
+			content1 = #{content1},
+			del_gb = 'N'
+			WHERE 
+			IDX = #{IDX}
+	        
+	    </update>
+ </mapper>

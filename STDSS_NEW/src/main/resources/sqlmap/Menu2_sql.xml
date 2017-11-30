@@ -1,0 +1,503 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="menu2">
+    
+    <select id="menu2_1_List" parameterType="hashMap" resultType="hashMap">
+		
+    select * from
+	    (SELECT  
+	    	(SELECT COUNT(*) 
+			FROM policy_inventory_collection AA, INDICATOR_CODE BB, (select distinct user_city_code  from member) CC 
+		    WHERE AA.INDICATOR_CODE = BB.TOTAL_CODE
+		    AND AA.SGG_CODE = CC.USER_CITY_CODE
+		    <if test="city_code != 0 ">  
+			AND AA.SGG_CODE = #{city_code}
+			</if>
+			And AA.year =#{selectYear}
+		    AND DEL_GB = 'N'
+			<if test="policy_name != NULL ">  
+			<if test="policy_name != ''">  
+  			    	     AND (AA.POLICY_NAME LIKE '%'+#{policy_name}+'%' or content_1 LIKE '%'+#{policy_name}+'%')  
+    		</if>  
+			</if>
+			
+			) as TOTAL_COUNT,
+			
+				Row_Number() Over ( Order By idx desc) as rnum,
+				IDX,POLICY_NAME, INDICATOR_CODE,  TOTAL_BUDGET, NOWYEAR_BUDGET, TYPE_1, TYPE_2 SYEAR, EYEAR, WAY, CONTENT_1, 
+		        SGG_CODE,  HIT_CNT, STEP_3,CREA_DTM,AA.user_id,year
+
+			FROM stdss.dbo.policy_inventory_collection AA,  stdss.dbo.INDICATOR_CODE BB, (select distinct user_city_code  from member) CC 
+			WHERE AA.INDICATOR_CODE = BB.TOTAL_CODE
+		    AND AA.SGG_CODE = CC.USER_CITY_CODE
+			AND DEL_GB = 'N'
+			And AA.year =#{selectYear}
+			<if test="city_code != 0 ">   
+			AND AA.SGG_CODE = #{city_code}
+			</if>
+			<if test="policy_name != NULL ">  
+			<if test="policy_name != ''">  
+  			         AND (AA.POLICY_NAME LIKE '%'+#{policy_name}+'%' or content_1 LIKE '%'+#{policy_name}+'%')  
+    			</if>  
+			</if>
+			
+			) t1	     
+		 	where rnum between ${START}  AND  ${END} 
+
+		ORDER BY IDX DESC
+	</select> 
+	
+    <select id="menu2_1_2016_List" parameterType="hashMap" resultType="hashMap">
+	 select* from 
+	 
+		 (select 
+		 
+			(SELECT COUNT(*) 
+				FROM policy_inventory t,category_city t2
+			  where t.city_code = t2.city_code
+			and t.city_code = #{city_code}
+			and t2.city_group_year = #{selectYear}
+			and t.year = #{selectYear}
+			<if test="policy_name != NULL ">  
+			<if test="policy_name != ''">  
+  			     and (t.policy_title LIKE '%'+#{policy_name}+'%' or t.policy_business_class LIKE '%'+#{policy_name}+'%')  
+    		</if>  
+			</if>
+			) as TOTAL_COUNT,
+			
+			 policy_code, t.city_group, t.city_code, t2.city_name, t2.city_number, policy_title, isnull(policy_total_budget,'')as policy_total_budget , isnull(policy_year_budget,'')as policy_year_budget , isnull(policy_start_year, '')as policy_start_year ,
+				isnull(policy_end_year, '')as policy_end_year, isnull(policy_system_code,'')as policy_system_code, isnull(policy_enforce_yn,'')as policy_enforce_yn , isnull(policy_means,'')as policy_means, isnull(policy_business_scale,' ')as policy_business_scale , isnull(policy_business_unit,' ')as policy_business_unit,isnull(policy_business_intro_background,' ') as policy_business_intro_background,
+			    isnull(policy_business_effect,' ')as policy_business_effect , isnull(policy_business_class,' ')as policy_business_class  , policy_business_etc, policy_success_degree, policy_etc_opinion, policy_source
+				,Row_Number() Over ( Order By t.policy_code desc) as rnum
+			from policy_inventory t, category_city t2
+			where t.city_code = t2.city_code
+			and t.city_code = #{city_code}
+			and t2.city_group_year = #{selectYear}
+			and t.year = #{selectYear}
+			<if test="policy_name != NULL ">  
+			<if test="policy_name != ''">  
+  			        and (t.policy_title LIKE '%'+#{policy_name}+'%' or t.policy_business_class LIKE '%'+#{policy_name}+'%')  
+    		</if>  
+			</if>
+			
+				) t1
+				
+			where rnum between ${START}  AND  ${END} 
+			order by policy_code desc
+
+	</select> 
+	
+     <select id="getBoardDetail" parameterType="hashmap" resultType="hashmap">
+		select 
+		  idx, year , indicator_code , policy_name , total_budget , nowYear_budget ,
+		  type_1, type_2, isnull(type_3_text,' ') as type_3_text, sYear, eYear , way ,
+		  isnull(way_text,' ') as way_text, content_1, content_2 , content_3 ,
+		  sgg_code , crea_dtm , hit_cnt , del_gb , user_id, 
+	  	  total_code , code_1, step_1 , code_2, step_2, code_3, step_3,user_city_code
+	  	from policy_inventory_collection a, indicator_code b, (select distinct user_city_code from member) c
+		
+		where a.indicator_code = b.total_code
+        and a.sgg_code = c.user_city_code
+        and idx = #{IDX}
+        and year = #{selectYear}
+    </select>
+    
+     <select id="selectFileList" parameterType="hashmap" resultType="hashmap">
+	    <![CDATA[
+	        SELECT
+	            IDX,
+	            ORIGINAL_FILE_NAME,
+	            ROUND(FILE_SIZE/1024,1) AS FILE_SIZE
+	        FROM
+	            APP_INFO_FILE
+	        WHERE
+	            BOARD_IDX = #{IDX}
+	            AND DEL_GB = 'N'
+	    ]]>
+	</select>
+      
+    <select id="getBoardDetailWay"  parameterType="hashmap" resultType="hashmap">
+		select way_name
+		from way_code
+		where way_code in (${resultWay})
+	</select> 
+    
+    
+ 	
+		<select id="menu2_1_Search" parameterType="hashMap" resultType="hashMap">
+		select * from policy_inventory 
+		where  policy_code = #{policy_code}
+		and year = #{selectYear}
+	</select>  
+	
+	
+	<select id="menu2_1_Search_2016" parameterType="hashMap" resultType="hashMap">
+		select distinct policy_name as policy_title, 
+			isnull(total_budget,'0')as policy_total_budget, 	 
+			nowYear_budget as policy_year_budget, 				
+	        isnull(sYear,'') as policy_start_year,isnull(eYear,'') as policy_end_year,
+	        isnull(type_1,'') as policy_system_code ,				
+	        isnull(type_2,'') as policy_enforce_yn ,
+	        way,
+	        content_1 as policy_business_intro_background,				
+	        content_2 as policy_business_effect,
+	        content_3 as policy_business_class, 
+	        t2.city_name, t.idx , 
+	        isnull(type_3_text,'') as type_3_text, 
+	        t.way_text				
+			
+		from policy_inventory_collection t, category_city t2			
+		where t.sgg_code = #{cityCode}		
+		and t.year = #{selectYear}		
+		and t.sgg_code = t2.city_code	
+		and del_gb ='N'		
+		<if test="policyName != null">
+			and policy_name like '%${policyName}%'
+		</if>
+		order by t.idx desc		
+	</select>  
+	 
+	<select id="menu2_2_Search" parameterType="hashMap" resultType="hashMap">
+	 select* from 
+	 (select 
+		(SELECT COUNT(*) 
+			FROM policy_inventory t,category_city t2, policy t3 
+				where t.city_code = t2.city_code
+				and t.policy_code = t3.policy_code
+				and t2.city_group_year = '2014'
+				and t.year = '2014'
+				and t3.policy_keyword = #{keyWordVal}
+		) as TOTAL_COUNT,
+			
+		t.policy_code, t.city_group, t.city_code, t2.city_name, t2.city_number, t.policy_title, policy_total_budget, policy_year_budget,  isnull(policy_start_year, '')as policy_start_year,
+			isnull(policy_end_year, '')as policy_end_year, isnull(policy_system_code,'')as policy_system_code, isnull(policy_enforce_yn,'')as policy_enforce_yn , isnull(policy_means,'')as policy_means, isnull(policy_business_scale,' ') as policy_business_scale, isnull(policy_business_unit,' ') as policy_business_unit, isnull(policy_business_intro_background,' ') as policy_business_intro_background,
+			isnull(policy_business_effect,' ')as policy_business_effect , policy_business_class, policy_business_etc, policy_success_degree, policy_etc_opinion, policy_source
+			,Row_Number() Over ( Order By t.policy_code desc) as rnum
+		from policy_inventory t, category_city t2, policy t3
+		where t.city_code = t2.city_code
+		and t.policy_code = t3.policy_code
+		and t.year = '2014'
+		and t2.city_group_year = '2014'
+		and t3.policy_keyword = #{keyWordVal}
+		) t1
+		where rnum between ${START}  AND  ${END} 
+		order by policy_code desc
+	</select> 
+
+	<select id="menu2_2_detail" parameterType="hashMap" resultType="hashMap">
+		select
+			  year,
+		      policy_code,
+		      city_group,
+		      city_code,
+		      policy_title,
+		      policy_total_budget,
+		      policy_year_budget,
+		      policy_start_year,
+		      policy_end_year,
+		      policy_system_code,
+		      policy_enforce_yn,
+		      policy_means,
+		      policy_business_scale,
+		      policy_business_unit,
+		      isnull(policy_business_intro_background,'') as policy_business_intro_background ,
+		      isnull(policy_business_effect,'') as policy_business_effect ,
+		      isnull(policy_business_class,'') as policy_business_class ,
+		      policy_business_etc,
+		      policy_success_degree,
+		      policy_etc_opinion,
+		      policy_source
+		from policy_inventory
+		where policy_code = #{policy_code}
+		and year = '2014'
+	</select> 
+	<select id="menu2_3_Search" parameterType="hashMap" resultType="hashMap">
+			 select* from 
+			 (select 
+				(SELECT COUNT(*) 
+						FROM policy_inventory t,category_city t2, policy t3 
+					   where t.city_code = t2.city_code
+					and t.policy_code = t3.policy_code
+					and t2.city_group_year = #{selectYear}
+					and t3.policy_year = #{selectYear}
+					and t3.policy_category = #{partVal}
+					and t.year = #{selectYear}
+				) as TOTAL_COUNT,
+					
+				t.year,t.policy_code, t.city_group, t.city_code, t2.city_name, t2.city_number, t.policy_title, policy_total_budget, policy_year_budget,  isnull(policy_start_year, '')as policy_start_year,
+					isnull(policy_end_year, '')as policy_end_year, isnull(policy_system_code,'')as policy_system_code, isnull(policy_enforce_yn,'')as policy_enforce_yn , isnull(policy_means,'')as policy_means, isnull(policy_business_scale,' ') as policy_business_scale, isnull(policy_business_unit,' ') as policy_business_unit, isnull(policy_business_intro_background,' ') as policy_business_intro_background,
+					isnull(policy_business_effect,' ')as policy_business_effect , policy_business_class, policy_business_etc, policy_success_degree, policy_etc_opinion, policy_source
+					,Row_Number() Over ( Order By t.policy_code desc) as rnum
+				from policy_inventory t, category_city t2, policy t3
+				where t.city_code = t2.city_code
+				and t.policy_code = t3.policy_code
+				and t2.city_group_year = #{selectYear}
+				and t3.policy_year = #{selectYear}
+				and t3.policy_category = #{partVal}
+				and t.year = #{selectYear}
+				) t1
+				where rnum between ${START}  AND  ${END} 
+				order by policy_code desc
+	</select> 
+	
+	<select id="menu2_3_2015_Search" parameterType="hashMap" resultType="hashMap">
+	  select* from 
+		 (select 
+				(SELECT COUNT(*) 
+						FROM policy_inventory2 t , category_city t2
+						where mp_code = ${partSel}
+						
+				and t.year = t2.city_group_year
+				and t.city_code = t2.city_code
+				
+				) as TOTAL_COUNT,
+					
+				t.*,t2.city_name,Row_Number() Over ( Order By policy_code desc) as rnum
+				from policy_inventory2 t , category_city t2
+				where mp_code =${partSel}
+	
+				and t.year = t2.city_group_year
+				and t.city_code = t2.city_code
+				
+				) t5
+				where rnum between ${START}  AND   ${END} 
+				order by policy_code desc
+	
+	</select>
+		<select id="menu2_3_new_Search" parameterType="hashMap" resultType="hashMap">
+		  select * from 
+	 
+			 (select 
+				(SELECT COUNT(*) 
+						FROM policy_inventory2016 t , category_city t2
+						where mp_code = ${partSel}
+						
+				and t.year = t2.city_group_year
+				and t.city_code = t2.city_code
+				
+				) as TOTAL_COUNT,
+					
+				t.*,t2.city_name,Row_Number() Over ( Order By policy_code desc) as rnum
+				from policy_inventory2016 t , category_city t2
+				where mp_code =${partSel}
+				and t.year = #{selectYear}
+				and t.year = t2.city_group_year
+				and t.city_code = t2.city_code
+				
+				) t5
+				where rnum between ${START}  AND   ${END} 
+				order by policy_code desc
+	</select> 
+	
+	<select id="menu2_3_detail" parameterType="hashMap" resultType="hashMap">
+				select 
+					t.policy_code, t.city_group, t.city_code, t2.city_name,
+					t2.city_number, t.policy_title, policy_total_budget,
+					policy_year_budget, isnull(policy_start_year, '')as policy_start_year,
+					isnull(policy_end_year, '')as policy_end_year,
+					isnull(policy_system_code,'')as policy_system_code,
+					isnull(policy_enforce_yn,'')as policy_enforce_yn ,
+					isnull(policy_means,'')as policy_means, isnull(policy_business_scale,'
+					') as policy_business_scale, isnull(policy_business_unit,' ') as
+					policy_business_unit, isnull(policy_business_intro_background,' ') as
+					policy_business_intro_background,
+					isnull(policy_business_effect,' ')as policy_business_effect, policy_business_class,
+					policy_business_etc
+				from policy_inventory t, category_city t2, policy t3
+				
+				where t.city_code = t2.city_code
+				and t.policy_code = t3.policy_code
+				and t2.city_group_year = #{selectYear}
+				and t3.policy_year = #{selectYear}
+				and t.policy_code = #{policy_code}
+				order by t.policy_code * 1
+	</select> 
+			
+	<select id="menu2_3_2015_detail" parameterType="hashMap" resultType="hashMap">
+		select 
+			t.policy_code, t.city_group, t.city_code, t2.city_name,
+			t2.city_number, t.policy_title, isnull(policy_total_budget, '') as policy_total_budget,
+			isnull(policy_year_budget, '') as policy_year_budget, isnull(policy_start_year, '')as policy_start_year,
+			isnull(policy_end_year, '')as policy_end_year,
+			isnull(policy_system_code,'')as policy_system_code,
+			isnull(policy_enforce_yn,'')as policy_enforce_yn ,
+			isnull(policy_means,'')as policy_means, isnull(policy_business_intro_background,' ') as
+			policy_business_intro_background,
+			isnull(policy_business_effect,' ')as policy_business_effect, policy_business_class
+		from policy_inventory2 t, category_city t2 
+		where  t2.city_group_year = #{selectYear}
+		and t.policy_code = #{policy_code}
+		and t.city_code = t2.city_code
+		order by t.policy_code * 1
+			</select> 
+			
+			
+
+	
+	<select id="menu2_4_Search" parameterType="hashMap" resultType="hashMap">
+	select * from (select (select count(policy_foreign_code)from policy_foreign_inventory) as TOTAL_COUNT,  policy_foreign_code, policy_part_code,	policy_foreign_city_name,	policy_foreign_country_name,
+		policy_foreign_policy_name,	policy_foreign_budget,	policy_foreign_Ins_Fac,	policy_foreign_year,
+			policy_foreign_means,	policy_foreign_background,	policy_foreign_detail,	policy_foreign_effect,	
+			
+				isnull(policy_foreign_population, '-')as policy_foreign_population,
+				isnull(policy_foreign_grdp, '-')as policy_foreign_grdp,
+				isnull(policy_foreign_area, '-')as policy_foreign_area,
+				isnull(policy_foreign_geography, '-')as policy_foreign_geography,
+				isnull(policy_foreign_pop_density, '-')as policy_foreign_pop_density,
+				isnull(policy_foreign_altitude, '-')as policy_foreign_altitude,
+				isnull(policy_foreign_employer, '-')as policy_foreign_employer,
+				isnull(policy_foreign_air_pollution, '-')as policy_foreign_air_pollution,
+				isnull(car_enrollment, '-')as car_enrollment,
+				isnull(average_traffic_volume, '-')as average_traffic_volume,
+				isnull(car_subway_whether, '-')as car_subway_whether,
+				isnull(average_traffic_speed, '-')as average_traffic_speed,
+				isnull(transportation_share_ratio_bus, '-')as transportation_share_ratio_bus,
+				isnull(transportation_share_ratio_subway, '-')as transportation_share_ratio_subway,
+				isnull(traffic_accident_injury, '-')as traffic_accident_injury,
+				isnull(traffic_accident_dead, '-')as traffic_accident_dead,
+				isnull(passengers_bus, '-')as passengers_bus,
+				isnull(passengers_subway, '-')as passengers_subway,
+				isnull(parking_lot, '-')as parking_lot,
+				isnull(parking_place, '-')as parking_place,
+				Row_Number() Over ( Order By policy_foreign_code desc) as rnum
+
+		from policy_foreign_inventory ) t1
+		where rnum between ${START}  AND  ${END} 
+			<if test="txtVal != '' ">
+		<if test="txtVal != null">
+			and policy_foreign_policy_name like '%${txtVal}%'
+		</if>
+		</if>
+		order by policy_foreign_code desc
+	</select> 
+
+	<select id="menu2_4_detail" parameterType="hashMap" resultType="hashMap">
+	
+	  select policy_foreign_code, policy_part_code,	policy_foreign_city_name,	policy_foreign_country_name,
+			policy_foreign_policy_name,	policy_foreign_budget,	policy_foreign_Ins_Fac,	policy_foreign_year,
+			policy_foreign_means,	policy_foreign_background,	policy_foreign_detail,	policy_foreign_effect,	
+			isnull(policy_foreign_population, '-')as policy_foreign_population,
+				isnull(policy_foreign_grdp, '-')as policy_foreign_grdp,
+				isnull(policy_foreign_area, '-')as policy_foreign_area,
+				isnull(policy_foreign_geography, '-')as policy_foreign_geography,
+				isnull(policy_foreign_pop_density, '-')as policy_foreign_pop_density,
+				isnull(policy_foreign_altitude, '-')as policy_foreign_altitude,
+				isnull(policy_foreign_employer, '-')as policy_foreign_employer,
+				isnull(policy_foreign_air_pollution, '-')as policy_foreign_air_pollution,
+				isnull(car_enrollment, '-')as car_enrollment,
+				isnull(average_traffic_volume, '-')as average_traffic_volume,
+				isnull(car_subway_whether, '-')as car_subway_whether,
+				isnull(average_traffic_speed, '-')as average_traffic_speed,
+				isnull(transportation_share_ratio_bus, '-')as transportation_share_ratio_bus,
+				isnull(transportation_share_ratio_subway, '-')as transportation_share_ratio_subway,
+				isnull(traffic_accident_injury, '-')as traffic_accident_injury,
+				isnull(traffic_accident_dead, '-')as traffic_accident_dead,
+				isnull(passengers_bus, '-')as passengers_bus,
+				isnull(passengers_subway, '-')as passengers_subway,
+				isnull(parking_lot, '-')as parking_lot,
+				isnull(parking_place, '-')as parking_place
+		from policy_foreign_inventory 
+		where policy_foreign_code = #{idx}
+
+	</select> 
+
+
+	
+	<select id="getCodeTransText" parameterType="hashMap" resultType="hashMap">
+		select policy_division_code, policy_division_content, policy_enforce_code,  isnull(policy_enforce_content , '') as policy_enforce_content
+		from category_policy
+		where policy_division_code = #{systemCode}
+		<if test="enforceCode != null">
+		    <if test='enforceCode !=""'>
+		        	<if test='enforceCode != "-"'>
+						and policy_enforce_code = #{enforceCode}
+		        	</if>
+		    </if>  
+		</if>
+		order by policy_division_code, policy_enforce_code
+	</select> 
+	
+	<select id="getCodeTransText2" parameterType="hashMap" resultType="hashMap">
+		select policy_division_code, policy_division_content, policy_enforce_code,  isnull(policy_enforce_content , ' ') as policy_enforce_content
+			from category_policy
+			where policy_division_code = #{policy_division_code}
+			and policy_enforce_code = #{systemCode}
+		    order by policy_division_code, policy_enforce_code
+	</select> 
+  
+	
+	<select id="getPartInfo" resultType="hashMap">
+		select distinct part_code, part_content
+		from category_policy_part
+		order by part_code
+	</select> 
+
+	
+	<select id="getCountry" resultType="hashMap">
+		select distinct policy_foreign_country_name, ROW_NUMBER() OVER(PARTITION BY policy_foreign_code order by policy_foreign_code
+	 ) rownum
+		from policy_foreign_inventory
+	</select> 
+
+	
+	<select id="getPartInfoList" parameterType="hashMap" resultType="hashMap">
+		select part_code2, part_content2
+		from category_policy_part
+		where part_code = #{partVal}
+		order by part_code2*1
+	</select> 
+
+	
+	<select id="getCityInfoList" parameterType="hashMap" resultType="hashMap">
+		select distinct policy_foreign_city_name,ROW_NUMBER() OVER(PARTITION BY policy_foreign_code order by policy_foreign_code
+	 ) rownum
+		from policy_foreign_inventory
+		where policy_foreign_country_name = #{countryVal}
+	</select> 
+
+	
+	<select id="getCodeTransText_Means" parameterType="hashMap" resultType="hashMap">
+		select policy_transport_code, policy_transport_content
+		from category_transport
+		where policy_transport_code in (${meansCode})
+		order by policy_transport_code*1
+	</select> 
+
+	  
+	<select id="getKeyWordList" parameterType="hashMap" resultType="hashMap">
+		select distinct policy_keyword   
+		from policy   
+		where category_code = #{keyWordVal}
+		and policy_keyword is not null
+		order by policy_keyword  
+	</select> 
+	
+	<select id="excelList" parameterType="hashMap" resultType="hashMap" >
+	select policy_title,t2.city_name
+	    from policy_inventory t, category_city t2
+		where t.city_code = t2.city_code
+		and t.city_code = #{cityCode}
+		and t2.city_group_year = #{selectYear}
+		and t.year = #{selectYear}
+	</select>
+
+		<select id="excelList_2016" parameterType="hashMap" resultType="hashMap" >
+	select policy_name as policy_title ,t2.city_name,t.idx
+	    from policy_inventory_collection t, category_city t2
+		where t.sgg_code = t2.city_code
+		and t.sgg_code = #{cityCode}
+		and t2.city_group_year = #{selectYear}
+		and t.year = #{selectYear} 
+		and t.del_gb = 'n'
+		order by t.idx desc
+	</select>
+	<select id="fileIdx" parameterType="hashMap" resultType="hashMap" >
+	     select * from 
+	     app_info_file
+	     where board_idx = #{idx}
+	     and del_gb = 'N'
+	    
+	</select>
+	
+ </mapper>

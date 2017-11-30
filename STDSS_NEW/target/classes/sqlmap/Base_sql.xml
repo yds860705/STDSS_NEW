@@ -1,0 +1,329 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="base">  
+    
+    <select id="memberInfo" resultType="hashmap">
+        SELECT USER_CODE, USER_ID
+		FROM TB_MEMBER
+		WHERE USER_CODE != '0000'
+		AND USER_CODE != '9999'
+		ORDER BY USER_ID
+    </select>
+
+    <select id="getUserName" parameterType="String" resultType="String">
+        SELECT USER_ID
+		FROM MEMBER
+		WHERE USER_ID = #{user_id}
+    </select>
+     
+    <!-- 분류그룹에 해당하는 도시를 가져온다  -->
+ 	<select id="getStdssCityGroup" parameterType="hashMap" resultType="hashMap">
+ 	    SELECT city_name, city_group, city_code, city_number
+ 	    FROM CATEGORY_CITY
+ 	    WHERE CITY_GROUP = #{groupIdVal}
+ 	    and city_group_year = #{selectYear}
+ 	    ORDER BY CITY_NUMBER
+ 	</select>
+
+ 	
+ 	<!-- 분류그룹에 해당하는 도시를 가져온다  -->
+ 	<select id="getStdssGroupList" parameterType="String" resultType="hashMap">
+ 	    SELECT distinct city_group
+		FROM CATEGORY_CITY     
+		where city_group_year = #{selectYear}
+		order by city_group
+ 	</select>
+ 	
+	<select id="getStdssGroupList_evaluation" parameterType="String" resultType="hashMap">
+ 	    SELECT distinct city_group
+		FROM CATEGORY_CITY     
+		order by city_group
+ 	</select>
+ 	
+ 	<!-- 평가 부문에 해당하는 지표를 가져온다  -->
+ 	<select id="getStdssIndicatorGroup" parameterType="String" resultType="hashMap">
+ 	    SELECT category_name_3, category_column_name
+ 	    FROM CATEGORY_BASE    
+ 	    WHERE CATEGORY_CODE_2 = #{indicatorVal}
+ 	    ORDER BY CATEGORY_INDEX
+ 	</select> 
+ 	
+ 	<!-- 로그인시 회원정보 있는지 확인 -->
+ 	<select id="getUserByUserIdAndPasswd" parameterType="hashMap" resultType="com.stdss.common.model.User">
+		SELECT *
+		FROM member
+		WHERE user_id = #{user_id}
+		AND user_pwd = #{user_pwd}
+ 	</select>
+ 	 
+ 	<!--로그인시 ip와 날짜 남기기  -->
+ 	<insert id="insertUserInfo" parameterType="java.util.Map">
+ 	    insert into access_log 
+ 	    values(#{user_id}, #{user_ip},getdate())       
+ 	</insert>
+ 	
+ 	<!-- 회원정보 수정 -->	
+ 	<update id="user_modify" parameterType="hashmap">
+ 		UPDATE member SET 
+			user_tel = #{user_tel},
+			user_name = #{user_name},
+			user_email = #{user_email}
+				<if test="new_pwd != 'null'">
+					<if test="new_pwd !=''"> 
+						,user_pwd = #{new_pwd}
+			    	</if>
+      			</if>
+      	where user_id =#{user_id}
+    </update>
+  
+    <!--회원정보 변경 - 비밀번호  -->
+ 	<select id="modifyPwdChk" parameterType="hashmap" resultType="Integer">
+        SELECT COUNT(*)
+		FROM MEMBER
+		WHERE user_id = #{user_id}
+		AND USER_PWD = #{oldPwd}
+    </select>
+    
+    <!--로그인시 첫로그인인지 확인 0:첫로그인 1:2번째 로그인  -->	
+ 	<select id="login_cnt" parameterType="hashmap" resultType="Integer">
+        SELECT login_cnt
+		FROM MEMBER
+		where user_id= #{user_id}
+    </select>
+    
+    <!--첫로그인 이후 login_cnt +1  -->
+    <update id="update_login_cnt" parameterType="hashmap">
+			UPDATE member 
+			SET
+				login_cnt = ISNULL(login_cnt, 0) + 1
+			WHERE
+				user_id = #{user_id}	
+	</update>
+
+	<select id="calender_chk" parameterType="hashmap" resultType="hashmap">
+		select *
+		from
+		calender_file
+		where year = #{selectYear}
+		and idx =#{selectList}
+		and type_chk = #{type_chk}
+	</select>
+    
+    <insert id="calender_insert" parameterType="hashmap">
+		
+		<![CDATA[
+			INSERT INTO calender_file
+			(
+				idx,
+				type_chk,
+				year,
+				ORIGINAL_FILE_NAME,
+				STORED_FILE_NAME,
+				FILE_SIZE,
+				CREA_DTM
+			)
+			VALUES
+			( 
+				#{selectList},
+				#{type_chk},
+				#{year},
+				#{ORIGINAL_FILE_NAME},
+				#{STORED_FILE_NAME},
+				#{FILE_SIZE},
+				getdate()
+			)  
+		]]>
+	</insert>
+	
+    <update id="calender_update" parameterType="hashmap">
+        
+		<![CDATA[
+			update  calender_file set
+			
+				idx = #{selectList},
+				year = #{year},
+				type_chk = #{type_chk},
+				ORIGINAL_FILE_NAME =#{ORIGINAL_FILE_NAME},
+				STORED_FILE_NAME=#{STORED_FILE_NAME},
+				FILE_SIZE = #{FILE_SIZE},
+				CREA_DTM = getdate()
+				
+			where year =#{year}
+			and  idx = #{selectList}  	
+			]]>
+	</update>
+	
+    <select id="data_chk" parameterType="hashmap" resultType="hashmap">
+		select *
+		from
+		calender_file
+		where year = #{selectYear}
+		and idx =#{selectList}
+		and type_chk = #{type_chk}
+	</select>
+    
+
+    <insert id="ppt_insertFile" parameterType="hashmap">
+		
+		<![CDATA[
+			INSERT INTO upload_ppt_file
+			(
+				year,
+				ORIGINAL_FILE_NAME,
+				STORED_FILE_NAME,
+				FILE_SIZE,
+				CREA_DTM
+			)
+			VALUES
+			( 
+				#{year},
+				#{ORIGINAL_FILE_NAME},
+				#{STORED_FILE_NAME},
+				#{FILE_SIZE},
+				getdate()
+			)  
+		]]>
+	</insert>
+	
+    <select id="awradList_chk" parameterType="hashmap" resultType="hashmap">
+		select *
+		from
+		award_file
+		where year = #{selectYear}
+		and idx =#{selectList}
+		and type_chk = #{type_chk}
+	</select>
+        <insert id="awardList_img_insert" parameterType="hashmap">
+		
+		<![CDATA[
+			INSERT INTO award_file
+			(
+				idx,
+				type_chk,
+				year,
+				ORIGINAL_FILE_NAME,
+				STORED_FILE_NAME,
+				FILE_SIZE,
+				width,
+				height,
+				CREA_DTM
+			)
+			VALUES
+			( 
+				#{selectList},
+				#{type_chk},
+				#{year},
+				#{ORIGINAL_FILE_NAME},
+				#{STORED_FILE_NAME},
+				#{FILE_SIZE},
+				#{width},
+				#{height},
+				getdate()
+			)  
+		]]>
+	</insert>
+	
+         <update id="awardList_img_update" parameterType="hashmap">
+        
+		<![CDATA[
+			update  award_file set
+			
+				idx = #{selectList},
+				type_chk = #{type_chk},
+				year = #{year},
+				ORIGINAL_FILE_NAME =#{ORIGINAL_FILE_NAME},
+				STORED_FILE_NAME=#{STORED_FILE_NAME},
+				FILE_SIZE = #{FILE_SIZE},
+				CREA_DTM = getdate()
+				
+			where year =#{year}
+			and  idx = #{selectList}  	
+			
+
+		]]>
+	</update>
+ 
+    
+       <select id="uploadppt_search"  resultType="hashmap">
+	        SELECT * FROM upload_ppt_file
+	       
+	</select>
+	
+	<update id="updateAward" parameterType="hashmap">
+      	UPDATE awards_result SET
+			group_1 = #{group_1},
+		    group_2 = #{group_2},
+			group_3 = #{group_3},
+			group_4 = #{group_4},
+			group_1_gp = #{group_1_gp},
+			group_2_gp = #{group_2_gp},
+			group_3_gp = #{group_3_gp},
+			group_4_gp = #{group_4_gp},
+			group_1_ea = #{group_1_ea},
+			group_2_ea = #{group_2_ea},
+			group_3_ea =#{group_3_ea},										
+			group_4_ea = #{group_4_ea}  
+		WHERE year = #{selectYear}
+        
+    </update>
+    
+	<insert id="insertAward" parameterType="hashmap" useGeneratedKeys="true" keyProperty="IDX">
+		INSERT INTO awards_result(year,group_1, group_2, group_3, group_4, group_1_gp, group_2_gp,group_3_gp,group_4_gp, group_1_ea, group_2_ea,group_3_ea,group_4_ea) 
+	    VALUES
+	    (
+		    #{selectYear},
+		    #{group_1},
+		    #{group_2},
+			#{group_3},
+			#{group_4},
+			#{group_1_gp},
+			#{group_2_gp},
+			#{group_3_gp},
+			#{group_4_gp},
+			#{group_1_ea},
+			#{group_2_ea},
+			#{group_3_ea},
+			#{group_4_ea}
+			)
+	</insert>
+	<select id="year_chk" parameterType="hashmap" resultType="hashmap">
+		    	select year from awards_result 
+	</select>
+	  <select id="selectFileInfo" parameterType="hashmap" resultType="hashmap">
+	        SELECT
+	            STORED_FILE_NAME,
+	            ORIGINAL_FILE_NAME
+	        FROM
+	            calender_file
+	        WHERE
+	            IDX = #{idx}
+	        and year = #{selectYear}    
+	        and type_chk = #{type_chk}
+	</select>
+	<select id="manager_upload_file" parameterType="hashmap" resultType="hashmap">
+			SELECT
+				idx,
+				YEAR,
+				STORED_FILE_NAME,
+				ORIGINAL_FILE_NAME
+			FROM
+				calender_file
+				WHERE year = #{selectYear}
+				and type_chk = #{type_chk}
+			order by idx asc
+	</select>
+	
+	<insert id="insertUpload" parameterType="java.util.Map">
+ 	    insert into policy_estimation1 
+ 	    values(#{A},#{B},#{C},#{D},#{E},#{F},#{G},#{H},#{I},#{J},#{K},#{L},#{M},#{N},#{O},#{P},
+        		#{Q},#{R},#{S},#{T},#{U},#{V},#{W},#{X},#{Y},#{Z},#{AA},#{AB},#{AC},#{AD},#{AE},#{AF},#{AG},#{AH},#{AI},#{AJ})       
+ 	</insert>
+	
+	<delete id="app_info_reset" >
+			truncate table app_info
+	</delete>
+	
+	
+    
+</mapper>  
