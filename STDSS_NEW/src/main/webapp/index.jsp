@@ -9,6 +9,7 @@
 <script type="text/javascript">
 
 	location.href = "/openIndexPage.do";
+	/*  */
 </script>
   
 </head>
