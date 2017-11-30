@@ -7,7 +7,7 @@
 var returnUrl = '${returnUrl}'; 
 
 
-/*  */
+/*커밋테스트  */
 //document.location.href = returnUrl;
 </script>
 </body>
