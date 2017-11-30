@@ -7,7 +7,7 @@
 var returnUrl = '${returnUrl}'; 
 
 
-
+/*  */
 //document.location.href = returnUrl;
 </script>
 </body>
